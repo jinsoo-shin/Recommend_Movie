@@ -153,3 +153,7 @@ class KMeans:
             axis_z.append(i[2])
 
         return axis_x, axis_y, axis_z
+
+
+# KNN 알고리즘 추가 예정
+
