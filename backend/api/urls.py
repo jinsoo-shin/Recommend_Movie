@@ -2,7 +2,7 @@ from django.conf.urls import url
 from api.views import movie_views
 from api.views import auth_views
 from api.views import rating_views
-from api.views import jinsooTest
+from api.views import js_view
 from api.views import jjy_view
     # , recommend_views
 from api.views import rating_views
@@ -16,7 +16,7 @@ urlpatterns = [
     url('movies/$', movie_views.movies, name='movie_list'),
     url('ratings/$', rating_views.ratings, name='rating_list'),
     url('recommends/$', recommend_views.recommends, name='recommend_list'),
-    url('test/$', jinsooTest.test, name='jinsooTest'),
+    url('test/$', js_view.test, name='js_view'),
     # url('test_jjy/$', jjy_view.test, name='jjyTest'),
     url('km_algo/$', km_algo_views.km_algo, name='km_algo'),
     url('delete/user/$', auth_views.delete, name='delete_user'),
