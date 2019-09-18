@@ -3,8 +3,8 @@
     <v-sheet height="590">
     <v-calendar
       type="month"
-      now="2019-09-10"
-      value="2019-09-10"
+      now=date
+      value=date
       light
       :events="events"
     ></v-calendar>
@@ -15,6 +15,7 @@
 <script>
 export default {
     data: () => ({
+      date: null,
       events: [
         {
           name: 'Vacation',
@@ -44,5 +45,8 @@ export default {
         },
       ],
     }),
+    mounted() {
+      this.date = new Date();
+    }
   }
 </script>
