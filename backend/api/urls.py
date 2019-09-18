@@ -8,6 +8,7 @@ from api.views import jjy_view
 from api.views import rating_views
 from api.views import km_algo_views
 from api.views import recommend_views
+from api.views import jwb_view
 
 urlpatterns = [
     url('auth/signup-many/$', auth_views.signup_many, name='sign_up_many'),
@@ -19,6 +20,7 @@ urlpatterns = [
     url('test/$', js_view.test, name='js_view'),
     # url('test_jjy/$', jjy_view.test, name='jjyTest'),
     url('km_algo/$', km_algo_views.km_algo, name='km_algo'),
+    url('jwb_view/$', jwb_view.jwb_view, name='jwb_view'),
     url('delete/user/$', auth_views.delete, name='delete_user'),
     url('update/user/$', auth_views.update, name='update_user'),
     url('delete/movie/$', movie_views.delete, name='delete_movie'),
