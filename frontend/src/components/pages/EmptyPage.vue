@@ -3,8 +3,7 @@
     <v-sheet height="590">
     <v-calendar
       type="month"
-      now=date
-      value=date
+      :value="str"
       light
       :events="events"
     ></v-calendar>
@@ -44,9 +43,12 @@ export default {
           end: '2019-09-16',
         },
       ],
+      str: ''
     }),
     mounted() {
       this.date = new Date();
+      this.str = this.date.toISOString().substring(0,10);
+      console.log(this.str)
     }
   }
 </script>
