@@ -1,30 +1,14 @@
 import pandas as pd
 import numpy as np
-from sklearn.cluster import KMeans, AgglomerativeClustering
-from api.models import Rating, Profile, Movie, KmeansResult
 from django.db import connection, connections
-from django.core.exceptions import EmptyResultSet
-from scipy.sparse import csr_matrix
-from api.views import helper
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from api.serializers import RatingSerializer, ProfileSerializer, MovieSerializer, SimilarMoviesSerializer, \
-    SimilarUsersSerializer
-from django.db.models import Avg
-import math
-from sklearn.metrics.pairwise import cosine_similarity
-
-from sklearn.mixture import GaussianMixture
 
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import train_test_split
 import sqlite3
-import os
-import time
-import gc
-import argparse
+from sklearn.preprocessing import MinMaxScaler
 
 genres = ['Action', 'Adventure', 'Animation', "Children's", 'Comedy', 'Crime', 'Documentary', 'Drama', 'Fantasy'
     , 'Film-Noir', 'Horror', 'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War', 'Western']
@@ -35,36 +19,67 @@ genres = ['Action', 'Adventure', 'Animation', "Children's", 'Comedy', 'Crime', '
 def test(request):
     if request.method == 'GET':
 
+        userid = 2
+        user = my_sql("user",str(userid))
         cnx = sqlite3.connect('db.sqlite3')
-        df = pd.read_sql_query("SELECT r.userid, r.rating,p.gender,p.age,p.occupation FROM api_profile p,api_rating r WHERE p.id = r.userid and r.movieid=1197 LIMIT 10",cnx)
+        sql = "Select user_id,gender,age,occupation from api_profile where gender= '"+ str(user[0])+ "' and age = "+ str(user[1])+" and not user_id= "+str(userid)
+        # sql = "Select user_id,gender,age,occupation from api_profile where gender= '"+ str(user[0])+ "' and age = "+ str(user[1])+" and occupation= '"+str(user[2])+"' and not user_id= "+str(userid)
 
-        print(df.head())
+        print(pd.read_sql_query(sql,cnx))
 
-        print(df['gender'].value_counts())
+        dict_gender={'F':2,
+            'M':1}
+        df = pd.read_sql_query(sql,cnx)
+
+        addRownum =[]
+        for i in range(len(df)):
+            addRownum.append(i+1)
+
+        df['rownum']=addRownum
 
         df['gender']=df['gender'].map({
-            'F':0,
+            'F':2,
             'M':1
         })
 
-        print(df.head())
-
+        # print(df.head())
+        dict_occupation ={"other":21, "academic/educator":1, "artist":2,"clerical/admin":3, "college/grad student":4,
+           "customer service":5,  "doctor/health care":6,"executive/managerial":7,"farmer":8,  "homemaker":9,
+             "K-12 student":10, "lawyer":11, "programmer":12, "retired":13, "sales/marketing":14,
+             "scientist":15,  "self-employed":16,  "technician/engineer":17, "tradesman/craftsman":18,
+             "unemployed":19,  "writer":20}
         df['occupation'] = df['occupation'].map({
-            "other":0, "academic/educator":1, "artist":2,"clerical/admin":3, "college/grad student":4,
+            "other":21, "academic/educator":1, "artist":2,"clerical/admin":3, "college/grad student":4,
            "customer service":5,  "doctor/health care":6,"executive/managerial":7,"farmer":8,  "homemaker":9,
              "K-12 student":10, "lawyer":11, "programmer":12, "retired":13, "sales/marketing":14,
              "scientist":15,  "self-employed":16,  "technician/engineer":17, "tradesman/craftsman":18,
              "unemployed":19,  "writer":20
         })
+
+        # df=df.sample(frac=1)
+        # df=df.sample(frac=1).reset_index(drop=True)
         print(df.head())
 
-        y=df['rating'].values.reshape(-1,1)
-        X=df.loc[:,['userid','gender','age','occupation']]
+        # output = MinMaxScaler.transform(df)
+        # output = pd.DataFrame(output, columns=df.columns, index=list(df.index.values))
 
-        kNN = KNeighborsRegressor(n_neighbors=2)
+
+
+        y=df['rownum'].values.reshape(-1,1)
+        # y=df['user_id'].values.reshape(-1,1)
+        X=df.loc[:,['gender','age','occupation']]
+
+        output = MinMaxScaler().fit_transform(X)
+        X= pd.DataFrame(output)
+        print(X)
+
+
+        kNN = KNeighborsClassifier(n_neighbors=5)
+        # kNN = KNeighborsRegressor(n_neighbors=5)
 
         print(kNN.fit(X,y))
-        example = np.array([1,0,1,10])
+        example = np.array([dict_gender[user[0]],user[1],dict_occupation[user[2]]])
+        # example = np.array([0,1,10])
         example = example.reshape(1, -1)
         test = kNN.fit(X,y).predict(example)
 
@@ -83,10 +98,15 @@ def test(request):
 def my_sql(key, value):
     cursor = connection.cursor()
     if key == 'user':
-        str = 'SELECT username FROM `auth_user` WHERE id IN (' + value + ')'
-        cursor.execute(str)
+        # str = 'SELECT username FROM `auth_user` WHERE id IN (' + value + ')'
+        query = "Select gender,age,occupation from api_profile where id = "+value
+        cursor.execute(query)
 
-    # row = cursor.fetchall()
+    row = cursor.fetchone()
+    return row
+
+
+    #  row = cursor.fetchall()
     # return row
     row = dictfetchall(cursor)
     return row
