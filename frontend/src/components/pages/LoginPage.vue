@@ -277,8 +277,8 @@ export default {
 				}
 				else{
 					alert("로그인 성공!")
-					console.log(response)
-					sessionStorage.setItem('user', response.data[0]);
+					sessionStorage.setItem('user', JSON.stringify(response.data[0]));
+					// console.log(sessionStorage.getItem('user'))
 					location.href="/";
 				}
 			}).catch(error =>{
@@ -301,17 +301,19 @@ export default {
 				occupation : this.select_occupation,
 				gender : this.select_gender
 			};     
-			axios.post(`${apiUrl}/auth/signup/`, {
-					params,
-			}).then(response => {
-				console.log(response)
-				alert("가입 성공!")
-			}).catch(error =>{
-			}).finally(rs =>{
-				this.name= ''
-				this.email= ''
-				this.password= ''
-			})
+			// axios.post(`${apiUrl}/auth/signup/`, {
+			// 		params,
+			// }).then(response => {
+			// 	console.log(response)
+			// 	alert("가입 성공!")
+			// 	loaction.replace('Tutorial')
+			// }).catch(error =>{
+			// }).finally(rs =>{
+			// 	this.name= ''
+			// 	this.email= ''
+			// 	this.password= ''
+			// })
+			location.replace('Tutorial')
 		},
 		sendEmail() {
 		}
