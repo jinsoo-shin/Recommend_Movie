@@ -313,6 +313,7 @@ export default {
 			// 	this.email= ''
 			// 	this.password= ''
 			// })
+			sessionStorage.setItem('Cookie', true);
 			location.replace('Tutorial')
 		},
 		sendEmail() {
