@@ -68,6 +68,9 @@ export default {
       select: []
   }),
   mounted(){
+
+    if(sessionStorage.getItem('Cookie'))
+    {
       axios.get(`${apiUrl}/movies/`).then(response => {
             // this.Users=[]
             this.Movies = response.data;
@@ -75,6 +78,11 @@ export default {
           }).catch(error =>{
           }).finally(rs =>{
           })
+    }
+    else{
+      alert('접근하실 수 없습니다!');
+      location.replace('/');
+    }
   },
   methods: {
       selection(item){
@@ -90,16 +98,12 @@ export default {
               }
           }
       },
-      leave(){
-          return "떠나시려구요?"
-      }
   },
   created() {
         history.pushState(null, null, location.href);
         window.onpopstate = function(event) {
         history.go(1);
         };
-        window.addEventListener('onbeforeunload', this.leave())
   },
 }
 </script>

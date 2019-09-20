@@ -168,7 +168,6 @@ import router from "./router";
     chk(){
       if(sessionStorage.getItem('user'))
       {
-        console.log(sessionStorage.getItem('user'))
         if(sessionStorage.getItem('user').is_staff == 0)
         {
           return false;
