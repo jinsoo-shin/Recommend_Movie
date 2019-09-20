@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.cluster import KMeans, AgglomerativeClustering
+from sklearn.cluster import KMeans, AgglomerativeClustering # KMeans, Hierarchical
 from api.models import Rating, Profile, Movie, KmeansResult
 from django.db import connection, connections
 from django.core.exceptions import EmptyResultSet
@@ -15,7 +15,8 @@ from django.db.models import Avg
 import math
 from sklearn.metrics.pairwise import cosine_similarity
 import json
-from sklearn.mixture import GaussianMixture
+from sklearn.mixture import GaussianMixture # EM
+from sklearn.neighbors import NearestNeighbors # KNN
 
 import random
 from scipy.sparse import dok_matrix
@@ -85,7 +86,7 @@ def postPredictions_KMeans(input_cluster_algorithm,input_cluster_num, rating_per
 
     sparse_ratings = csr_matrix(pd.SparseDataFrame(most_rated_movies_1k).to_coo())
     # sparse_ratings = csr_matrix(pd.SparseDataFrame(user_movie_ratings).to_coo())
-    # print(sparse_ratings.todense())
+    # print(sparse_ratings)
 
 
     if not input_cluster_algorithm:
@@ -109,6 +110,9 @@ def postPredictions_KMeans(input_cluster_algorithm,input_cluster_num, rating_per
             km_self_ratings.append([rowcol_ratings[i][0],rowcol_ratings[i][1],value_ratings[i]])
         clus = KMeans_algo(20)
         predictions = clus.train(km_self_ratings)
+    if input_cluster_algorithm == 'KNN':
+        predictions = NearestNeighbors(n_neighbors=20, algorithm='auto').fit(sparse_ratings)
+        print("프리: ", predictions)
 
     # predictions = AgglomerativeClustering(n_clusters=20, affinity='euclidean', linkage='ward').fit_predict(sparse_ratings)
 
