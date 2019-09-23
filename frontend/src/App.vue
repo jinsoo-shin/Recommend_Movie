@@ -138,6 +138,14 @@ import router from "./router";
         this.choices[4].icon = 'exit_to_app';
         this.choices[4].path = '1';
         this.choices[4].text = '로그 아웃';
+
+        let info = {
+        icon: "account_box",
+        text: "내 정보",
+        path: "MyPage"
+      }
+        console.log(info);
+        this.choices.push(info);
       }
     },
     mounted(){
@@ -160,13 +168,13 @@ import router from "./router";
     chk(){
       if(sessionStorage.getItem('user'))
       {
-      if(sessionStorage.getItem('user').is_staff == 0)
-      {
-        return false;
-      }
-      else{
-        return true;
-      }
+        if(sessionStorage.getItem('user').is_staff == 0)
+        {
+          return false;
+        }
+        else{
+          return true;
+        }
       }
     },
     getImgUrl(img) {
