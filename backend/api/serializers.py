@@ -1,4 +1,4 @@
-from .models import Profile, Movie, Rating, KmeansResult, SimilarMovies, SimilarUsers
+from .models import Profile, Movie, Rating, KmeansResult, SimilarMovies, SimilarUsers, Subscribe
 from rest_framework import serializers
 
 
@@ -29,6 +29,11 @@ class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = ('userid', 'movieid', 'rating','date')
+
+class SubscribeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscribe
+        fields = ('user_id', 'expiration')
 
 
 class KmeansResultSerializer(serializers.ModelSerializer):
