@@ -73,5 +73,9 @@ class AlgorithmResult(models.Model):
     name = models.CharField(max_length=500)#모델 이름
     value = models.CharField(max_length=20000)
 
-class MoviePoster(models.Model):
-    posterUrl = models.CharField(max_length=500)
+
+class Poster(models.Model):
+    id = models.IntegerField(primary_key=True)
+    imdbId = models.IntegerField()
+    posterUrl = models.CharField(max_length=20000)
+
