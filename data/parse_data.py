@@ -1,7 +1,6 @@
 import requests
 import json
 import datetime
-import re
 # from django.conf import timezone
 
 API_URL = 'http://localhost:8000/api/'
@@ -58,22 +57,15 @@ def create_movies():
 
 def create_movies_poster():
     request_data = {'movies_posters': []}
-    id=1
     with open('MovieGenre-1.csv','r', encoding='ISO-8859-1') as movie_poster_data:
         for line in movie_poster_data :
             data = line.split(',')
-            posterUrl = re.sub('[{"\}]','',data[5])
-            imdbId = data[0]
-            [id,imdbId,posterUrl] = [id,imdbId,posterUrl]
+            posterUrl = data[5]
             request_data['movies_posters'].append({
-                'id': id,
-                'imdbId':imdbId,
                 'posterUrl': posterUrl
             })
-            id+=1
 
     response = requests.post(API_URL + 'movies_posters/', data=json.dumps(request_data), headers=headers)
-    
     # print(response.text)
 
 def create_ratings(num_users):
