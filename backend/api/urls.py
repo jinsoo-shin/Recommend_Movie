@@ -8,6 +8,7 @@ from api.views import rating_views
 from api.views import km_algo_views
 from api.views import recommend_views
 from api.views import jwb_view
+from api.views import subscribe_views
 
 urlpatterns = [
     url('auth/signup-many/$', auth_views.signup_many, name='sign_up_many'),
@@ -23,5 +24,6 @@ urlpatterns = [
     url('update/user/$', auth_views.update, name='update_user'),
     url('delete/movie/$', movie_views.delete, name='delete_movie'),
     url('update/movie/$', movie_views.update, name='update_movie'),
-    url('movies_posters/$', movie_poster.Movie_poster, name='poster'),
+    url('movies_posters/$', movie_poster.poster, name='poster'),
+    url('subscribes/$', subscribe_views.subscribe, name="subscribe")
 ]

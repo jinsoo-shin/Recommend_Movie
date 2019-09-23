@@ -124,5 +124,3 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
-DATA_UPLOAD_MAX_NUMBER_FIELDS = 40000
