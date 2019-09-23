@@ -26,9 +26,9 @@ dict_gender={'F':0,
 @api_view(['GET', 'POST'])
 def test(request):
     if request.method == 'GET':
-
-        userid=1
-
+        userid = request.GET.get('userid', None)
+        if not userid:
+            userid=1
         cnx = sqlite3.connect('db.sqlite3')
         query = "select distinct(userid), p.gender, p.age from api_rating r,api_profile p where r.userid= p.id and rating>=4 and userid !=  "+str(userid)+" and movieid in (select movieid from api_rating where rating>=4 and userid= "+str(userid)+" ) order by movieid asc"
         df_user = pd.read_sql_query(query, cnx)
@@ -87,12 +87,10 @@ def test(request):
         for i in range(len(nN_predict[0])):
             if nN_predict[0][i] == 1.0:
                 similar_user.append(str(y[i][0]))
-                print(y[i][0])
         print("유사한 유저 id",similar_user)
 
         user_list=",".join(similar_user)
-
-        query = "select distinct(movieid) mid, m.title from api_rating r, api_movie m where mid = m.id and userid in ("+user_list+") and r.rating>=4 and movieid not in ( select movieid from api_rating where userid=" + str(userid)+") order by r.rating desc limit 10"
+        query="select id movieid,title,genres from api_movie where movieid in (select movieid from api_rating where userid in ("+user_list+") and movieid not in ( select movieid from api_rating where userid=" + str(userid)+") group by movieid having avg(rating) order by avg(rating) desc limit 10)"
         result = pd.read_sql_query(query, cnx)
         print(result.head())
 
@@ -109,6 +107,8 @@ def test(request):
 #################################
 
         request_data=[]
+        for i in range(len(result)):
+            request_data.append({"key":i,"movieid":result['movieid'][i],"title":result['title'][i],"genres":result['genres'][i],"src":"https://images-na.ssl-images-amazon.com/images/M/MV5BMDU2ZWJlMjktMTRhMy00ZTA5LWEzNDgtYmNmZTEwZTViZWJkXkEyXkFqcGdeQXVyNDQ2OTk4MzI@._V1_UX182_CR0,0,182,268_AL_.jpg"})
         return Response(status=status.HTTP_200_OK,data=request_data)
         # return Response(status=status.HTTP_200_OK,data=json.dumps(request_data), headers=headers)
 
