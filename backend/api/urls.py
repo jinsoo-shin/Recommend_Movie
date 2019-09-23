@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from api.views import movie_views
+from api.views import movie_poster
 from api.views import auth_views
 from api.views import rating_views
 from api.views import js_view
@@ -25,4 +26,5 @@ urlpatterns = [
     url('update/user/$', auth_views.update, name='update_user'),
     url('delete/movie/$', movie_views.delete, name='delete_movie'),
     url('update/movie/$', movie_views.update, name='update_movie'),
+    url('movie_poster/$', movie_poster.poster, name='poster'),
 ]

@@ -1,4 +1,4 @@
-from .models import Profile, Movie, Rating, KmeansResult, SimilarMovies, SimilarUsers
+from .models import Profile, Movie, Rating, KmeansResult, SimilarMovies, SimilarUsers, MoviePoster
 from rest_framework import serializers
 
 
@@ -29,6 +29,11 @@ class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = ('userid', 'movieid', 'rating','date')
+
+class MoviePosterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MoviePoster
+        fields = ('posterUrl')
 
 
 class KmeansResultSerializer(serializers.ModelSerializer):
