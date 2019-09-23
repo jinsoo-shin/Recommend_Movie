@@ -49,10 +49,15 @@ class Rating(models.Model):
     # profile = models.ForeignKey(Profile, to_field='id', db_column='username', on_delete=models.CASCADE)
     # username = models.CharField(max_length=200)
     # userid = models.ForeignKey(Profile, db_column='userid',to_field='id', on_delete=models.CASCADE)
+
     userid = models.IntegerField(default=0)
     movieid = models.IntegerField(default=0)
     rating = models.IntegerField(default=0)
     date = models.DateTimeField(blank=True)
+
+class Subscribe(models.Model):
+    user_id = models.IntegerField(primary_key=True)
+    expiration = models.CharField(max_length=100)
 
 class KmeansResult(models.Model):
     clusterlist = models.CharField(max_length=20000)
