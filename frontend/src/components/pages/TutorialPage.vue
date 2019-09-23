@@ -34,9 +34,29 @@
                         :headers="Movieheaders"
                         :items="select"
                         :search="search"
+                        show-expand
+                        item-key="id"
+                        :single-expand="singleExpand"
                         height="25vmax"
                     >
-
+                    <template v-slot:expanded-item="{ headers, item }">
+                      <td :colspan="headers.length" style="text-align:center; background:antiquewhite; border:beige solid 0.1px;">
+                        <v-rating v-model="rating" half-increments hover style="display:inline" 
+                          background-color="white"
+                          empty-icon="$vuetify.icons.ratingFull"></v-rating><v-btn
+                          :loading="loading"
+                          :disabled="loading"
+                          depressed
+                          small
+                          color="blue-grey"
+                          class="ma-2 white--text"
+                          fab
+                          @click="loader = 'loading'"
+                        >
+                          <v-icon dark>mdi-cloud-upload</v-icon>
+                        </v-btn>
+                      </td>
+                    </template>
                     </v-data-table>
 
                     </v-card>
@@ -52,6 +72,12 @@ export default {
   name: 'TutorialPage',
   data: ()=>({
     userdata : null,
+    loader: null,
+    loading: false,
+    index : 0,
+    expanded: [],
+    rating: 0,
+    singleExpand: true,
     genres: ["Action", "Adventure", "Animation", "Children's", "Comedy", "Crime" ,"Documentary", "Drama", "Fantasy", "Film-Noir", "Horror", "Musical", "Mystery", "Romance", "Sci-Fi", "Thriller", "War", "Western"],
     Title : 'Movie',
     search: '',
@@ -105,5 +131,15 @@ export default {
         history.go(1);
         };
   },
+  watch: {
+      loader () {
+        const l = this.loader
+        this[l] = !this[l]
+
+        setTimeout(() => (this[l] = false), 2000)
+
+        this.loader = null
+      },
+    },
 }
 </script>
