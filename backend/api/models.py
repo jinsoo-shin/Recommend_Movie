@@ -74,4 +74,8 @@ class AlgorithmResult(models.Model):
     value = models.CharField(max_length=20000)
 
 
+class Poster(models.Model):
+    id = models.IntegerField(primary_key=True)
+    imdbId = models.IntegerField()
+    posterUrl = models.CharField(max_length=20000)
 
