@@ -9,3 +9,8 @@ m = np.matrix([
 ])
 
 m
+
+with open('MovieGenre-1.csv','r') as reader:
+    for line in reader:
+        fields = line.split(',')
+        print(fields[5])
