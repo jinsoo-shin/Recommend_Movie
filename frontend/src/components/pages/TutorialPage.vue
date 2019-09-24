@@ -43,7 +43,9 @@
                       <td :colspan="headers.length" style="text-align:center; background:antiquewhite; border:beige solid 0.1px;">
                         <v-rating v-model="rating" half-increments hover style="display:inline" 
                           background-color="white"
-                          empty-icon="$vuetify.icons.ratingFull"></v-rating><v-btn
+                          empty-icon="$vuetify.icons.ratingFull"></v-rating>
+                          
+                          <v-btn 
                           :loading="loading"
                           :disabled="loading"
                           depressed
@@ -52,7 +54,7 @@
                           class="ma-2 white--text"
                           fab
                           @click="loader = 'loading'"
-                        >
+                          >
                           <v-icon dark>mdi-cloud-upload</v-icon>
                         </v-btn>
                       </td>
@@ -124,6 +126,9 @@ export default {
               }
           }
       },
+      Vote(id){
+        alert(id +  " " + this.rating);
+      }
   },
   created() {
         history.pushState(null, null, location.href);
@@ -137,7 +142,6 @@ export default {
         this[l] = !this[l]
 
         setTimeout(() => (this[l] = false), 2000)
-
         this.loader = null
       },
     },
