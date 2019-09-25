@@ -20,9 +20,11 @@ dict_genres ={'Action':1, 'Adventure':2, 'Animation':3, "Children's":4, 'Comedy'
 @api_view(['GET', 'POST'])
 def jwb_view(request):
     if request.method == 'GET':
-
+        userid = request.GET.get('userid', None)
+        if not userid:
+            userid = 2
         # item base로 kNN 구현
-        userid = 2 # 로그인한 유저id를 param으로 가져온다.
+        # userid = 2 # 로그인한 유저id를 param으로 가져온다.
 
         user = my_sql("user",str(userid)) # 내가 본 영화중 평점 4점 이상의 movieid, genres
         print("로그인유저정보: ", user)
@@ -93,7 +95,7 @@ def jwb_view(request):
         # kNN=KNeighborsClassifier(n_neighbors=5)
 
         # 유클리디안 거리 기반으로 가까운 5개를 가져오도록 훈련한다
-        kNN=NearestNeighbors(n_neighbors=5,metric="euclidean").fit(item_x, item_y)
+        kNN=NearestNeighbors(n_neighbors=10,metric="euclidean").fit(item_x, item_y)
 
         # 예측에 사용할 userid를 가져와 예측에 사용할 수 있는 형식으로 만든다
         print("예측에 사용할 마이유저df: ",myuser_X)
@@ -109,13 +111,30 @@ def jwb_view(request):
         pre_list=[]
         for i in range(len(kNN_pre[0])):
             if kNN_pre[0][i] == 1:
-                pre_list.append(item_y[i][0])
+                pre_list.append(str(item_y[i][0]))
                 print(i)
 
         # 사용자에게 추천할 영화id 5개
         print(pre_list)
-
+        movie_list = ",".join(pre_list)
+        print("추천 영화 10개",movie_list)
+        query = "select m.id,m.title,m.genres,m.rating,c.posterUrl from api_movie m Left join api_moviecontent c on m.id=c.id where m.id in ("+movie_list+")"
+        result = pd.read_sql_query(query, cnx)
+        print(result)
         request_data=[]
+        for i in range(len(result)):
+            # print(result['posterUrl'][i])
+            if result['posterUrl'][i] is None:
+                request_data.append(
+                    {"key": i, "movieid": result['id'][i], "title": result['title'][i], "genres": result['genres'][i],
+                     "rating": result['rating'][i], "src": "http://folo.co.kr/img/gm_noimage.png"})
+            else:
+                request_data.append(
+                    {"key": i, "movieid": result['id'][i], "title": result['title'][i], "genres": result['genres'][i],
+                     "rating": result['rating'][i], "src": result['posterUrl'][i]})
+            # else:
+            #     request_data.append({"key":i,"movieid":result['movieid'][i],"title":result['title'][i],"genres":result['genres'][i],"rating":result['rating'][i],"src":"http://folo.co.kr/img/gm_noimage.png"})
+
         return Response(status=status.HTTP_200_OK,data=request_data)
         # return Response(status=status.HTTP_200_OK,data=json.dumps(request_data), headers=headers)
 

@@ -1,54 +1,48 @@
 <template>
   <v-flex shrink style="text-align:center">
-    <v-sheet height="590">
-    <v-calendar
-      type="month"
-      :value="str"
-      light
-      :events="events"
-    ></v-calendar>
-  </v-sheet>
+    <v-flex v-if="user">
+      <kNNUserBase></kNNUserBase>
+      <v-divider class="ma-4"></v-divider>
+      <kNNItemBase></kNNItemBase>
+    </v-flex>
+     <v-flex v-if="!user">
+      로그인을 하셔야 유저별 맞춤 영화 추천 서비스를 받을 수 있습니다.
+    </v-flex>
+    <!-- <v-divider class="ma-4"></v-divider> -->
+    <!-- <kNNUserBase></kNNUserBase> -->
   </v-flex>
 </template>
 
 <script>
+import axios from "axios"
+const apiUrl = '/api'
+import kNNUserBase from "../kNNUserBase"
+import kNNItemBase from "../kNNItemBase"
 export default {
+    components: {
+    kNNUserBase,kNNItemBase
+  },
     data: () => ({
-      date: null,
-      events: [
-        {
-          name: 'Vacation',
-          start: '2019-09-22',
-          end: '2019-09-30',
-        },
-        {
-          name: 'Meeting',
-          start: '2019-09-07',
-        },
-        {
-          name: "SH's Birthday",
-          start: '2019-10-04',
-        },
-        {
-          name: 'New Month',
-          start: '2019-09-01',
-        },
-        {
-          name: 'Conference',
-          start: '2019-09-21',
-        },
-        {
-          name: 'ThanksGivingDay',
-          start: '2019-09-12',
-          end: '2019-09-16',
-        },
+      data:[
       ],
-      str: ''
+      model:null,
+      str: '',
+      user:null
     }),
     mounted() {
-      this.date = new Date();
-      this.str = this.date.toISOString().substring(0,10);
-      console.log(this.str)
+      if(sessionStorage.getItem('user')){
+        this.user=JSON.parse(sessionStorage.getItem('user'))
+      }
+      //   // console.log(this.user.id)
+      //   const params = {
+      //     userid: this.user.id,
+      //   };     
+      //   axios.get(`${apiUrl}/test/`, {
+      //         params,
+      //     }).then(response => {
+      //       this.data=response.data
+      //     }) 
+      // }
     }
   }
 </script>
