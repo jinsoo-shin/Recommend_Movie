@@ -35,6 +35,7 @@ class MoviePosterSerializer(serializers.ModelSerializer):
     class Meta:
         model = MoviePoster
         fields = ('posterUrl')
+        
 class SubscribeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscribe

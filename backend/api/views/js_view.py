@@ -12,6 +12,10 @@ import sqlite3
 from sklearn.preprocessing import MinMaxScaler,Normalizer
 from sklearn.decomposition import NMF
 
+from api.models import Poster,MovieContent
+from bs4 import BeautifulSoup
+import requests
+
 #  X = np.array([[1, 1], [2, 1], [3, 1.2], [4, 1], [5, 0.8], [6, 1]])
 # >>> from sklearn.decomposition import NMF
 # >>> model = NMF(n_components=2, init='random', random_state=0)
@@ -67,16 +71,16 @@ def test(request):
         X=df_new.loc[:,col_list]
 
         ####################
-        vector_array = X.as_matrix()
-        nmf = NMF(n_components=20)
-        features=nmf.fit_transform(vector_array)
-
-
-
-        normalizer = Normalizer()
-        norm_features = normalizer.fit_transform(features)
-        df_features = pd.DataFrame(norm_features)
-        print(df_features.head())
+        # vector_array = X.as_matrix()
+        # nmf = NMF(n_components=20)
+        # features=nmf.fit_transform(vector_array)
+        #
+        #
+        #
+        # normalizer = Normalizer()
+        # norm_features = normalizer.fit_transform(features)
+        # df_features = pd.DataFrame(norm_features)
+        # print(df_features.head())
 
         ##유사도
 
@@ -98,10 +102,10 @@ def test(request):
         example = np.array(my_user_list)
         example = example.reshape(1, -1)
 ################################
-        ##유사도
-        similar = df_features.dot(example)
-        top = similar.nlargest()
-        print("결과",top)
+        # ##유사도
+        # similar = df_features.dot(example)
+        # top = similar.nlargest()
+        # print("결과",top)
 ################################
         # kNN = KNeighborsClassifier(n_neighbors=5)
         # test = kNN.fit(X,y).predict(example)
@@ -118,9 +122,10 @@ def test(request):
         print("유사한 유저 id",similar_user)
 
         user_list=",".join(similar_user)
-        query="select id movieid,title,genres,rating from api_movie where movieid in (select movieid from api_rating where userid in ("+user_list+") and movieid not in ( select movieid from api_rating where userid=" + str(userid)+") group by movieid having avg(rating) order by avg(rating) desc limit 10)"
+        # query="select m.id,m.title,m.genres,m.rating, p.posterUrl from api_movie m,api_moviecontent p where m.id = p.id and m.id in (select movieid from api_rating where userid in ("+user_list+") and movieid not in ( select movieid from api_rating where userid=" + str(userid)+") group by movieid having avg(rating) order by avg(rating) desc limit 10)"
+        query="select m.id,m.title,m.genres,m.rating, p.posterUrl from api_movie m left join api_moviecontent p on m.id = p.id where m.id in (select movieid from api_rating where userid in ("+user_list+") and movieid not in ( select movieid from api_rating where userid="+ str(userid)+")) group by m.id having avg(m.rating) order by avg(m.rating) desc limit 10"
         result = pd.read_sql_query(query, cnx)
-        print(result.head())
+        print(result)
 
 
         # df_test = pd.DataFrame(index=df_user,columns=df_movie)
@@ -136,10 +141,79 @@ def test(request):
 
         request_data=[]
         for i in range(len(result)):
-            request_data.append({"key":i,"movieid":result['movieid'][i],"title":result['title'][i],"genres":result['genres'][i],"rating":result['rating'][i],"src":"https://images-na.ssl-images-amazon.com/images/M/MV5BMDU2ZWJlMjktMTRhMy00ZTA5LWEzNDgtYmNmZTEwZTViZWJkXkEyXkFqcGdeQXVyNDQ2OTk4MzI@._V1_UX182_CR0,0,182,268_AL_.jpg"})
+            # print(result['posterUrl'][i])
+            if result['posterUrl'][i] is not None:
+                request_data.append({"key":i,"movieid":result['id'][i],"title":result['title'][i],"genres":result['genres'][i],"rating":result['rating'][i],"src":result['posterUrl'][i]})
+            else:
+                request_data.append({"key":i,"movieid":result['id'][i],"title":result['title'][i],"genres":result['genres'][i],"rating":result['rating'][i],"src":"http://folo.co.kr/img/gm_noimage.png"})
         return Response(status=status.HTTP_200_OK,data=request_data)
         # return Response(status=status.HTTP_200_OK,data=json.dumps(request_data), headers=headers)
 
+
+    if request.method == 'POST':
+        # parse = pd.read_csv("MovieGenre.csv")
+###############################
+        cursor = connection.cursor()
+        query = 'select id,ImdbLink from api_poster'
+        cursor.execute(query)
+        row = cursor.fetchall()
+        # for i in range(0,3):
+        for i in range(2079,len(row)):
+            id = row[i][0]
+            url = row[i][1]
+            req = requests.get(url)
+            soup = BeautifulSoup(req.text,'html.parser')
+            t1 = soup.select_one('.poster')
+            # print(t1)
+            if t1 is not None:
+                t1 = t1.select_one('a>img')['src'] #포스터
+            else:
+                t1= "http://folo.co.kr/img/gm_noimage.png"
+            t2 = soup.select_one('.plot_summary').select('div')
+
+            Summary=t2[0].text.strip() #... ...뒤에 자르기
+            if '...' in Summary:
+                Summary= Summary[:Summary.find('...')+3].strip()
+            Director=""
+            if t2[1]:
+                Director=t2[1].text.strip()
+                if ':' in Director:
+                    Director= Director[Director.find(':')+1:].strip()
+                if '|' in Director:
+                    Director = Director[:Director.find('|')].strip()
+            Writers=""
+            try:
+                if t2[2]:
+                    Writers = t2[2].text.strip()
+                    if ':' in Writers:
+                        Writers= Writers[Writers.find(':')+1:].strip()
+                    if '|' in Writers:
+                        Writers = Writers[:Writers.find('|')].strip()
+            except:
+                Writers = ""
+            MovieContent(id=id, posterUrl=t1, ImdbLink=url,Summary=Summary,Director=Director,Writers=Writers).save()
+###############################################
+        # parse = pd.read_csv('MovieGenre.csv', encoding="ISO-8859-1", engine='python')
+        # print(str(parse['imdbId'][0]).zfill(7))
+        # print(parse['Title'][0])
+        # print(parse['Poster'][0])
+        # print(parse.head())
+        # print(my_sql("getMovieId",parse['Title'][0]))
+        # for i in range(len(parse)):
+        # # for i in range(2550,2580):
+        #     print(parse.loc[[i]])
+        #     id = my_sql("getMovieId",parse['Title'][i])
+        #     if not id:
+        #         continue
+        #     id=id[0]
+        #     poster = "http://folo.co.kr/img/gm_noimage.png"
+        #     if parse['Poster'][i] is not 'NaN':
+        #         poster = parse['Poster'][i]
+        #     imdbId = "http://www.imdb.com/title/tt"+str(parse['imdbId'][i]).zfill(7)
+        #     Poster(id=id, posterUrl=poster, ImdbLink=imdbId).save()
+            # MovieContent
+        request_data=[]
+        return Response(status=status.HTTP_200_OK, data=request_data)
 
 
 def my_sql(key, value):
@@ -161,8 +235,12 @@ def my_sql(key, value):
         cursor.execute(query)
         row = dictfetchall(cursor)
         return row
-
-
+    if key == 'getMovieId': #타이틀로 영화 아이디 가져오기
+        value = value.strip()
+        query = 'Select id from api_movie where title like "%'+value+'%"'
+        cursor.execute(query)
+        row = cursor.fetchone()
+        return row
 
     #  row = cursor.fetchall()
     # return row

@@ -123,13 +123,13 @@ export default {
       const params = {
         mode: "user",
         movieid: this.id
-        };
+      };
       this.searchRating(params)
       this.changeDialog();
       this.silmilar_movies = await this.get_silmilar_movies();
-      this.changeMovieInfo(movie)
+      this.changeMovieInfo(movie)//movieinfo에 넘기기용 vuex
       axios.put(`${apiUrl}/movies/?movieid=`+this.id, {
-      })
+      })//조회수 증가
     },
     ...mapActions("data", ["changeDialog","changeMovieInfo","searchRating"]),
   },
