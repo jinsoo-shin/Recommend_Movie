@@ -25,6 +25,7 @@ def movies(request):
         if id:
             movies = movies.filter(pk=id)
         if title:
+            ## 여기에 영화 이미지도 추가하기
             movies = movies.filter(title__icontains=title)
         if genres:
             genres=genres.split(',')
