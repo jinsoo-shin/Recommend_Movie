@@ -291,9 +291,13 @@ export default {
 						axios.get(`${apiUrl}/subscribes/`, {
 						  params,
 						  }).then(response => {
-							// console.log("섬스:",response.data)
+							console.log("섬스:",response.data)
 							sessionStorage.setItem('subscribe', response.data);
+<<<<<<< HEAD
+							location.href="/";
+=======
 						location.href="/";
+>>>>>>> a1a54bc8a155d83a5b63c19fda25658a4a11798b
 						})
 
 					}).catch(error =>{
