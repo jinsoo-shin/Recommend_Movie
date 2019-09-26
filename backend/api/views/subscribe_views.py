@@ -34,11 +34,7 @@ def subscribe(request):
 
         now = datetime.datetime.now().strftime('%Y-%m-%d')
         expiration = now
-        # expiration = datetime.datetime.strptime(expiration,'%Y-%m-%d %H:%M:%S.%f')
         db_expiration = my_sql(str(user_id))
-        # print("하나아아ㅏ",datetime.datetime.strptime(db_expiration[1],'%Y-%m-%d %H:%M:%S.%f')-datetime.datetime.now())
-        # print(db_expiration[1])
-        #TODO: now랑 구독날짜 비교해서 if문 완성해야함!
         if period == '1mon': # 1개월 구독
             # 해당유저의 첫 구독이거나 날짜가 지났으면 아래 실행
             if db_expiration is None or (datetime.datetime.strptime(db_expiration[1],'%Y-%m-%d %H:%M:%S.%f')<datetime.datetime.now()):
@@ -46,7 +42,7 @@ def subscribe(request):
                 # expiration = expiration.strftime('%Y-%m-%d')
             else:
                 expiration = datetime.datetime.strptime(db_expiration[1],'%Y-%m-%d %H:%M:%S.%f') + datetime.timedelta(days=30)
-        if period == '3mon': # 1개월 구독
+        if period == '3mon': # 3개월 구독
             # 해당유저의 첫 구독이거나 날짜가 지났으면 아래 실행
             if db_expiration is None or (datetime.datetime.strptime(db_expiration[1],'%Y-%m-%d %H:%M:%S.%f')<datetime.datetime.now()):
                 expiration = datetime.datetime.now() + datetime.timedelta(days=90)
@@ -54,7 +50,7 @@ def subscribe(request):
             else:
                 expiration = datetime.datetime.strptime(db_expiration[1],'%Y-%m-%d %H:%M:%S.%f') + datetime.timedelta(days=90)
         
-        if period == '1year': # 1개월 구독
+        if period == '1year': # 12개월 구독
             # 해당유저의 첫 구독이거나 날짜가 지났으면 아래 실행
             if db_expiration is None or (datetime.datetime.strptime(db_expiration[1],'%Y-%m-%d %H:%M:%S.%f')<datetime.datetime.now()):
                 expiration = datetime.datetime.now() + datetime.timedelta(days=365)
