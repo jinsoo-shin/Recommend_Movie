@@ -13,7 +13,7 @@ from sklearn.preprocessing import MinMaxScaler,Normalizer
 from sklearn.decomposition import NMF
 
 from api.models import Poster,MovieContent
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 import requests
 
 #  X = np.array([[1, 1], [2, 1], [3, 1.2], [4, 1], [5, 0.8], [6, 1]])
