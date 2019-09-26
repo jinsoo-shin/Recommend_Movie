@@ -84,6 +84,7 @@ def ratings(request):
                 print(userid,movieid,rating,date)
                 Rating(userid=userid, movieid=movieid, rating=rating, date=date).save()
         if params:
+            print(params)
             userid=params.get('userid',None)
             movieid = params.get('movieid', None)
             rating = params.get('rating', None)
