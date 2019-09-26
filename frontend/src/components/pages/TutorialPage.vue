@@ -53,7 +53,7 @@
                           color="blue-grey"
                           class="ma-2 white--text"
                           fab
-                          @click="loader = 'loading'"
+                          @click="PostRate(item.id)"
                           >
                           <v-icon dark>mdi-cloud-upload</v-icon>
                         </v-btn>
@@ -111,6 +111,10 @@ export default {
       alert('접근하실 수 없습니다!');
       location.replace('/');
     }
+
+    this.$swal('평점 선택',
+  '안녕하세요? 관람하신 영화의 평점을 남겨주세요.다 마치신 후에 다른 페이지로 이동하시면 됩니다.',
+  'question');
   },
   methods: {
       selection(item){
@@ -126,8 +130,14 @@ export default {
               }
           }
       },
-      Vote(id){
+      PostRate(id){
         alert(id +  " " + this.rating);
+        axios.POST(`${apiUrl}/ratings/`).then(response => {
+            // this.Users=[]
+
+          }).catch(error =>{
+          }).finally(rs =>{
+          })
       }
   },
   created() {

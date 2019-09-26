@@ -16,7 +16,9 @@ def signup_many(request):
         profiles = Profile.objects.all()
         if username:
             # profiles = profiles.filter(user_id="1")
-            profiles = profiles.filter(user__username__icontains=username)
+            print(username)
+            profiles = profiles.filter(user__username=username)
+            print(profiles)
 
         serializer = ProfileSerializer(profiles, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
