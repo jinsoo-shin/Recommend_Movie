@@ -135,7 +135,8 @@ export default {
     // }
 
     console.log("나이", this.age);
-
+    // asdasd
+    
     // const params = {
     //   user_id: this.userdata.id,
     //   expiration: "" // 현재 날짜 + 30 스트링으로 보내야함
