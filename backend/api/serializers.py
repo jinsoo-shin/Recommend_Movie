@@ -1,3 +1,4 @@
+from .models import Profile, Movie, Rating, KmeansResult, SimilarMovies, SimilarUsers, Subscribe
 from .models import Profile, Movie, Rating, KmeansResult, SimilarMovies, SimilarUsers, MoviePoster, Subscribe
 from rest_framework import serializers
 

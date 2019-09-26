@@ -75,3 +75,16 @@ class AlgorithmResult(models.Model):
 
 class MoviePoster(models.Model):
     posterUrl = models.CharField(max_length=500)
+
+class Poster(models.Model):
+    id = models.IntegerField(unique=True,primary_key=True,default=number)
+    ImdbLink = models.CharField(max_length=500)
+    posterUrl = models.CharField(max_length=500)
+
+class MovieContent(models.Model):
+    id = models.IntegerField(unique=True,primary_key=True,default=number)
+    ImdbLink = models.CharField(max_length=500)
+    posterUrl = models.CharField(max_length=500)
+    Summary = models.CharField(max_length=500)
+    Director = models.CharField(max_length=500)
+    Writers = models.CharField(max_length=500)
