@@ -320,20 +320,29 @@ export default {
 				occupation : this.select_occupation,
 				gender : this.select_gender
 			};
+			var flag = false;
+
 			axios.post(`${apiUrl}/auth/signup/`, {
 					params,
 			}).then(response => {
+				// sessionStorage.setItem('Cookie', true);
+				sessionStorage.setItem('Cookie', JSON.stringify(response));
 				console.log(response)
 				alert("가입 성공!")
-				sessionStorage.setItem('Cookie', true);
-				loaction.replace('Tutorial')
+				location.replace('Tutorial');
+				flag = true;
 			}).catch(error =>{
+				console.log(error);
 			}).finally(rs =>{
 				this.name= ''
 				this.email= ''
 				this.password= ''
 			})
-			location.replace('Tutorial')
+
+			if(flag)
+			{
+				console.log(flag);
+			}
 		},
 		sendEmail() {
 		}
