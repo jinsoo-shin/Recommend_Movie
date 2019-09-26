@@ -157,45 +157,45 @@ def test(request):
     if request.method == 'POST':
         # parse = pd.read_csv("MovieGenre.csv")
 ###############################
-        cursor = connection.cursor()
-        query = 'select id,ImdbLink from api_poster'
-        cursor.execute(query)
-        row = cursor.fetchall()
+        # cursor = connection.cursor()
+        # query = 'select id,ImdbLink from api_poster'
+        # cursor.execute(query)
+        # row = cursor.fetchall()
         # for i in range(0,3):
-        for i in range(2079,len(row)):
-            id = row[i][0]
-            url = row[i][1]
-            req = requests.get(url)
-            soup = BeautifulSoup(req.text,'html.parser')
-            t1 = soup.select_one('.poster')
-            # print(t1)
-            if t1 is not None:
-                t1 = t1.select_one('a>img')['src'] #포스터
-            else:
-                t1= "http://folo.co.kr/img/gm_noimage.png"
-            t2 = soup.select_one('.plot_summary').select('div')
-
-            Summary=t2[0].text.strip() #... ...뒤에 자르기
-            if '...' in Summary:
-                Summary= Summary[:Summary.find('...')+3].strip()
-            Director=""
-            if t2[1]:
-                Director=t2[1].text.strip()
-                if ':' in Director:
-                    Director= Director[Director.find(':')+1:].strip()
-                if '|' in Director:
-                    Director = Director[:Director.find('|')].strip()
-            Writers=""
-            try:
-                if t2[2]:
-                    Writers = t2[2].text.strip()
-                    if ':' in Writers:
-                        Writers= Writers[Writers.find(':')+1:].strip()
-                    if '|' in Writers:
-                        Writers = Writers[:Writers.find('|')].strip()
-            except:
-                Writers = ""
-            MovieContent(id=id, posterUrl=t1, ImdbLink=url,Summary=Summary,Director=Director,Writers=Writers).save()
+        # for i in range(2079,len(row)):
+        #     id = row[i][0]
+        #     url = row[i][1]
+        #     req = requests.get(url)
+        #     soup = BeautifulSoup(req.text,'html.parser')
+        #     t1 = soup.select_one('.poster')
+        #     # print(t1)
+        #     if t1 is not None:
+        #         t1 = t1.select_one('a>img')['src'] #포스터
+        #     else:
+        #         t1= "http://folo.co.kr/img/gm_noimage.png"
+        #     t2 = soup.select_one('.plot_summary').select('div')
+        #
+        #     Summary=t2[0].text.strip() #... ...뒤에 자르기
+        #     if '...' in Summary:
+        #         Summary= Summary[:Summary.find('...')+3].strip()
+        #     Director=""
+        #     if t2[1]:
+        #         Director=t2[1].text.strip()
+        #         if ':' in Director:
+        #             Director= Director[Director.find(':')+1:].strip()
+        #         if '|' in Director:
+        #             Director = Director[:Director.find('|')].strip()
+        #     Writers=""
+        #     try:
+        #         if t2[2]:
+        #             Writers = t2[2].text.strip()
+        #             if ':' in Writers:
+        #                 Writers= Writers[Writers.find(':')+1:].strip()
+        #             if '|' in Writers:
+        #                 Writers = Writers[:Writers.find('|')].strip()
+        #     except:
+        #         Writers = ""
+        #     MovieContent(id=id, posterUrl=t1, ImdbLink=url,Summary=Summary,Director=Director,Writers=Writers).save()
 ###############################################
         # parse = pd.read_csv('MovieGenre.csv', encoding="ISO-8859-1", engine='python')
         # print(str(parse['imdbId'][0]).zfill(7))
