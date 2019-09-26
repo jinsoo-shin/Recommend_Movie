@@ -70,6 +70,7 @@
 <script>
 import axios from "axios";
 const apiUrl = '/api'
+import Swal from 'sweetalert2'
 export default {
   name: 'TutorialPage',
   data: ()=>({
@@ -93,10 +94,16 @@ export default {
         { text: 'title', value: 'title' }
       ],
       Movies: [],
-      select: []
+      select: [],
+      RegUser : []
   }),
   mounted(){
-
+    axios.get(`${apiUrl}/auth/signup-many/`).then(response => {
+      this.RegUser = response.data[response.data.length-1];
+			}).catch(error =>{
+			}).finally(rs =>{
+      })
+      
     if(sessionStorage.getItem('Cookie'))
     {
       axios.get(`${apiUrl}/movies/`).then(response => {
@@ -111,17 +118,18 @@ export default {
       alert('접근하실 수 없습니다!');
       location.replace('/');
     }
-
-    this.$swal('평점 선택',
-  '안녕하세요? 관람하신 영화의 평점을 남겨주세요.다 마치신 후에 다른 페이지로 이동하시면 됩니다.',
-  'question');
+    Swal.fire({
+  type: 'question',
+  title: '평점 입력',
+  text : '평점을 입력하신 후 다른 페이지로 이동하세요.',
+  showConfirmButton: false,
+  timer: 3000
+})
   },
   methods: {
       selection(item){
           this.Title = item
-          console.log(item)
           this.select = [];
-          console.log(this.Movies[0])
           for(var i = 0; i < this.Movies.length;i++)
           {
               if(this.Movies[i].genres_array.indexOf(this.Title) != -1)
@@ -131,11 +139,15 @@ export default {
           }
       },
       PostRate(id){
-        alert(id +  " " + this.rating);
-        axios.POST(`${apiUrl}/ratings/`).then(response => {
-            // this.Users=[]
-
+        const params = {
+          userid : this.RegUser.id,
+          movieid : id,
+          rating : this.rating
+        }
+          axios.post(`${apiUrl}/ratings/`, { params }).then(response => {
+            Swal.fire({position: 'top-end', type:'success', text:'전송 완료!', showConfirmButton: false, width: '20%', timer: 1500, heightAuto: true})
           }).catch(error =>{
+            Swal.fire({type:'error', title:'다시 시도해주세요!'})
           }).finally(rs =>{
           })
       }

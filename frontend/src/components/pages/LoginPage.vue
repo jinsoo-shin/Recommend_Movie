@@ -306,12 +306,13 @@ export default {
 				age : this.select_age,
 				occupation : this.select_occupation,
 				gender : this.select_gender
-			};     
+			};
 			axios.post(`${apiUrl}/auth/signup/`, {
 					params,
 			}).then(response => {
 				console.log(response)
 				alert("가입 성공!")
+				sessionStorage.setItem('Cookie', true);
 				loaction.replace('Tutorial')
 			}).catch(error =>{
 			}).finally(rs =>{
@@ -319,7 +320,6 @@ export default {
 				this.email= ''
 				this.password= ''
 			})
-			sessionStorage.setItem('Cookie', true);
 			location.replace('Tutorial')
 		},
 		sendEmail() {

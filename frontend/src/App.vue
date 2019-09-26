@@ -173,9 +173,9 @@ import router from "./router";
       }
     },
     chk(){
-      if(sessionStorage.getItem('user'))
+      if(JSON.parse(sessionStorage.getItem('user')))
       {
-        if(sessionStorage.getItem('user').is_staff == 0)
+        if(JSON.parse(sessionStorage.getItem('user')).is_staff == 0)
         {
           return false;
         }

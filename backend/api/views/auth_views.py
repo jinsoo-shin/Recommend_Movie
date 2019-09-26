@@ -13,7 +13,9 @@ from django.db import connection
 def signup_many(request):
     if request.method == 'GET':
         username = request.GET.get('username', None)
+
         profiles = Profile.objects.all()
+
         if username:
             # profiles = profiles.filter(user_id="1")
             print(username)
