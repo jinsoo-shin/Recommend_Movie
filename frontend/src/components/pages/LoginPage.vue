@@ -277,9 +277,15 @@ export default {
 				}
 				else{
 					alert("로그인 성공!")
-					console.log(response)
-					sessionStorage.setItem('user', response.data[0]);
-					location.href="/";
+					axios.get(`${apiUrl}/auth/signup-many/?username=` + response.data[0].username).then(res => {
+						// this.Users=[]
+						sessionStorage.setItem('user', JSON.stringify(response.data[0]));
+						sessionStorage.setItem('user_temp', JSON.stringify(res.data[0]));
+						// console.log(sessionStorage.getItem('user'))
+						location.href="/";
+					}).catch(error =>{
+					}).finally(rs =>{
+					})
 				}
 			}).catch(error =>{
 				console.log(error)
@@ -306,12 +312,15 @@ export default {
 			}).then(response => {
 				console.log(response)
 				alert("가입 성공!")
+				loaction.replace('Tutorial')
 			}).catch(error =>{
 			}).finally(rs =>{
 				this.name= ''
 				this.email= ''
 				this.password= ''
 			})
+			sessionStorage.setItem('Cookie', true);
+			location.replace('Tutorial')
 		},
 		sendEmail() {
 		}

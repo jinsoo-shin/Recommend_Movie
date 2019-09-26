@@ -49,10 +49,15 @@ class Rating(models.Model):
     # profile = models.ForeignKey(Profile, to_field='id', db_column='username', on_delete=models.CASCADE)
     # username = models.CharField(max_length=200)
     # userid = models.ForeignKey(Profile, db_column='userid',to_field='id', on_delete=models.CASCADE)
+
     userid = models.IntegerField(default=0)
     movieid = models.IntegerField(default=0)
     rating = models.IntegerField(default=0)
     date = models.DateTimeField(blank=True)
+
+class Subscribe(models.Model):
+    user_id = models.IntegerField(primary_key=True)
+    expiration = models.CharField(max_length=100)
 
 class KmeansResult(models.Model):
     clusterlist = models.CharField(max_length=20000)
@@ -64,5 +69,22 @@ class SimilarMovies(models.Model):
     movies = models.CharField(max_length=20000)
 
 
+class AlgorithmResult(models.Model):
+    name = models.CharField(max_length=500)#모델 이름
+    value = models.CharField(max_length=20000)
 
+class MoviePoster(models.Model):
+    posterUrl = models.CharField(max_length=500)
 
+class Poster(models.Model):
+    id = models.IntegerField(unique=True,primary_key=True,default=number)
+    ImdbLink = models.CharField(max_length=500)
+    posterUrl = models.CharField(max_length=500)
+
+class MovieContent(models.Model):
+    id = models.IntegerField(unique=True,primary_key=True,default=number)
+    ImdbLink = models.CharField(max_length=500)
+    posterUrl = models.CharField(max_length=500)
+    Summary = models.CharField(max_length=500)
+    Director = models.CharField(max_length=500)
+    Writers = models.CharField(max_length=500)

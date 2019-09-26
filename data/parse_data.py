@@ -54,6 +54,20 @@ def create_movies():
     # print(response.text)
 
 
+
+def create_movies_poster():
+    request_data = {'movies_posters': []}
+    with open('MovieGenre-1.csv','r', encoding='ISO-8859-1') as movie_poster_data:
+        for line in movie_poster_data :
+            data = line.split(',')
+            posterUrl = data[5]
+            request_data['movies_posters'].append({
+                'posterUrl': posterUrl
+            })
+
+    response = requests.post(API_URL + 'movies_posters/', data=json.dumps(request_data), headers=headers)
+    # print(response.text)
+
 def create_ratings(num_users):
     ratings_data = open('./ratings.dat', 'r', encoding='ISO-8859-1')
 
@@ -83,6 +97,7 @@ def create_ratings(num_users):
 
 if __name__ == '__main__':
     num_users = 100
-    create_movies()
+    # create_movies()
+    create_movies_poster()
     # create_users(num_users)
     # create_ratings(num_users)

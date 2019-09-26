@@ -16,3 +16,5 @@
 * (도전과제) LDA, PLSI 모델을 활용한 영화 추천 정확도 개선
 
 * (도전과제) Dataset 확장을 통한 영화 추천 정확도 개선
+
+* KNN Algorithm Studying!
