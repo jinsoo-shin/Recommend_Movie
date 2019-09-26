@@ -123,7 +123,7 @@ def test(request):
 
         user_list=",".join(similar_user)
         # query="select m.id,m.title,m.genres,m.rating, p.posterUrl from api_movie m,api_moviecontent p where m.id = p.id and m.id in (select movieid from api_rating where userid in ("+user_list+") and movieid not in ( select movieid from api_rating where userid=" + str(userid)+") group by movieid having avg(rating) order by avg(rating) desc limit 10)"
-        query="select m.id,m.title,m.genres,m.rating, p.posterUrl from api_movie m left join api_moviecontent p on m.id = p.id where m.id in (select movieid from api_rating where userid in ("+user_list+") and movieid not in ( select movieid from api_rating where userid="+ str(userid)+")) group by m.id having avg(m.rating) order by avg(m.rating) desc limit 10"
+        query="select m.id,m.title,m.genres,m.rating, p.posterUrl,p.Summary,p.Director,p.Writers,p.ImdbLink from api_movie m left join api_moviecontent p on m.id = p.id where m.id in (select movieid from api_rating where userid in ("+user_list+") and movieid not in ( select movieid from api_rating where userid="+ str(userid)+")) group by m.id having avg(m.rating) order by avg(m.rating) desc limit 10"
         result = pd.read_sql_query(query, cnx)
         print(result)
 
@@ -142,10 +142,14 @@ def test(request):
         request_data=[]
         for i in range(len(result)):
             # print(result['posterUrl'][i])
-            if result['posterUrl'][i] is not None:
-                request_data.append({"key":i,"movieid":result['id'][i],"title":result['title'][i],"genres":result['genres'][i],"rating":result['rating'][i],"src":result['posterUrl'][i]})
-            else:
-                request_data.append({"key":i,"movieid":result['id'][i],"title":result['title'][i],"genres":result['genres'][i],"rating":result['rating'][i],"src":"http://folo.co.kr/img/gm_noimage.png"})
+            src=result['posterUrl'][i]
+            ImdbLink=result['ImdbLink'][i]
+            Director=result['Director'][i]
+            Writers=result['Writers'][i]
+            Summary=result['Summary'][i]
+            if src is None:
+                src="http://folo.co.kr/img/gm_noimage.png"
+            request_data.append({"key":i,"movieid":result['id'][i],"title":result['title'][i],"genres":result['genres'][i],"rating":result['rating'][i],"src":src,"ImdbLink":ImdbLink,"Director":Director,"Writers":Writers,"Summary":Summary})
         return Response(status=status.HTTP_200_OK,data=request_data)
         # return Response(status=status.HTTP_200_OK,data=json.dumps(request_data), headers=headers)
 

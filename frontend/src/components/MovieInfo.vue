@@ -20,7 +20,6 @@
                   >
                     <v-toolbar-title>영화 상세 정보</v-toolbar-title>
                   </v-toolbar>
-
                   <v-card-text>
                     <v-text-field filled label="타이틀" v-model="movie.title"></v-text-field>
                     <v-text-field filled label="장르" v-model="movie.genres"></v-text-field>
