@@ -282,7 +282,20 @@ export default {
 						sessionStorage.setItem('user', JSON.stringify(response.data[0]));
 						sessionStorage.setItem('user_temp', JSON.stringify(res.data[0]));
 						// console.log(sessionStorage.getItem('user'))
-						location.href="/";
+
+						// subscribe db에서 가져와서 해당유저의 구독 만료일 세션에등록
+						const params = {
+						  user_id: res.data[0].id
+						};
+
+						axios.get(`${apiUrl}/subscribes/`, {
+						  params,
+						  }).then(response => {
+							console.log("섬스:",response.data)
+							sessionStorage.setItem('subscribe', response.data);
+							location.href="/";
+						})
+
 					}).catch(error =>{
 					}).finally(rs =>{
 					})
