@@ -118,24 +118,26 @@ def jwb_view(request):
         print(pre_list)
         movie_list = ",".join(pre_list)
         print("추천 영화 10개",movie_list)
-        query = "select m.id,m.title,m.genres,m.rating,c.posterUrl from api_movie m Left join api_moviecontent c on m.id=c.id where m.id in ("+movie_list+")"
+        # query = "select m.id,m.title,m.genres,m.rating,c.posterUrl from api_movie m Left join api_moviecontent c on m.id=c.id where m.id in ("+movie_list+")"
+        query="select m.id,m.title,m.genres,m.rating, p.posterUrl,p.Summary,p.Director,p.Writers,p.ImdbLink from api_movie m left join api_moviecontent p on m.id = p.id where m.id in ("+movie_list+")"
         result = pd.read_sql_query(query, cnx)
         print(result)
-        request_data=[]
+
+        request_data = []
         for i in range(len(result)):
             # print(result['posterUrl'][i])
-            if result['posterUrl'][i] is None:
-                request_data.append(
-                    {"key": i, "movieid": result['id'][i], "title": result['title'][i], "genres": result['genres'][i],
-                     "rating": result['rating'][i], "src": "http://folo.co.kr/img/gm_noimage.png"})
-            else:
-                request_data.append(
-                    {"key": i, "movieid": result['id'][i], "title": result['title'][i], "genres": result['genres'][i],
-                     "rating": result['rating'][i], "src": result['posterUrl'][i]})
-            # else:
-            #     request_data.append({"key":i,"movieid":result['movieid'][i],"title":result['title'][i],"genres":result['genres'][i],"rating":result['rating'][i],"src":"http://folo.co.kr/img/gm_noimage.png"})
-
-        return Response(status=status.HTTP_200_OK,data=request_data)
+            src = result['posterUrl'][i]
+            ImdbLink = result['ImdbLink'][i]
+            Director = result['Director'][i]
+            Writers = result['Writers'][i]
+            Summary = result['Summary'][i]
+            if src is None:
+                src = "http://folo.co.kr/img/gm_noimage.png"
+            request_data.append(
+                {"key": i, "movieid": result['id'][i], "title": result['title'][i], "genres": result['genres'][i],
+                 "rating": result['rating'][i], "src": src, "ImdbLink": ImdbLink, "Director": Director,
+                 "Writers": Writers, "Summary": Summary})
+        return Response(status=status.HTTP_200_OK, data=request_data)
         # return Response(status=status.HTTP_200_OK,data=json.dumps(request_data), headers=headers)
 
 def my_sql(key, value):

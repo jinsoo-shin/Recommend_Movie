@@ -56,7 +56,7 @@
             <v-sheet
               v-if="model != null"
               color="grey lighten-4"
-              height="200"
+              height="400"
               tile
             >
               <v-row
@@ -68,13 +68,84 @@
                   <v-card
                     color="#385F73"
                     dark
+                    style="text-align:left"
                   >
-                    <v-card-text class="white--text">
+                   <v-card-text class="white--text">
                       <div class="headline mb-2">{{data[model].title}} </div>
-                      {{data[model].genres}}
-                       <v-rating half-increments readonly v-model="data[model].rating"></v-rating>({{data[model].rating}})
-                    </v-card-text>
+                      <v-row>
+                        <v-col cols="12">
+                          <v-card>
+                            <v-list dense>
+                              <v-list-item v-if="data[model].title">
+                                <v-col cols="2">
+                                  <v-list-item-content>Genres:</v-list-item-content>
+                                </v-col>
+                                <v-col cols="10">
+                                  <v-list-item-content class="align-end">{{ data[model].genres }}</v-list-item-content>
+                                </v-col>
+                              </v-list-item>
+                              <v-list-item v-if="data[model].rating">
+                                <v-col cols="2">
+                                  <v-list-item-content>Rating:</v-list-item-content>
+                                </v-col>
+                                <v-col cols="10">
+                                  <v-list-item-content class="align-end">
+                                    <v-flex>
+                                      ({{data[model].rating}}) 
+                                      <v-rating half-increments readonly v-model="data[model].rating" style="display:inline"></v-rating>
+                                    </v-flex></v-list-item-content>
+                                </v-col>
+                              </v-list-item>
+                              <v-list-item v-if="data[model].Summary">
+                                <v-col cols="2">
+                                  <v-list-item-content>Summary:</v-list-item-content>
+                                </v-col>
+                                <v-col cols="10">
+                                  <v-list-item-content class="align-end">{{ data[model].Summary }}</v-list-item-content>
+                                </v-col>
+                              </v-list-item>
 
+                              <v-list-item v-if="data[model].Director">
+                                <v-col cols="2">
+                                <v-list-item-content>Director:</v-list-item-content>
+                                </v-col>
+                                <v-col cols="10">
+                                  <v-list-item-content class="align-end">{{ data[model].Director}}</v-list-item-content>
+                                </v-col>
+                              </v-list-item>
+
+                              <v-list-item v-if="data[model].Writers">
+                                <v-col cols="2">
+                                  <v-list-item-content >Writers:</v-list-item-content>
+                                </v-col>
+                                <v-col cols="10">
+                                <v-list-item-content class="align-end">{{data[model].Writers }}</v-list-item-content>
+                                </v-col>
+                              </v-list-item>
+                            </v-list>
+                          </v-card>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                     <v-card-actions>
+                        <div class="flex-grow-1"></div>
+                        <v-btn
+                          text
+                          outlined 
+                          @click="newpage(data[model].ImdbLink)"
+                          v-if="data[model].src!=='http://folo.co.kr/img/gm_noimage.png'"
+                        >
+                          Show More
+                        </v-btn>
+                        <v-btn
+                          text
+                          outlined 
+                          @click="newsearchpage(data[model].title)"
+                          v-if="data[model].src==='http://folo.co.kr/img/gm_noimage.png'"
+                        >
+                          Show More
+                        </v-btn>
+                      </v-card-actions>
                     <!-- <v-card-actions>
                       <v-btn text>Listen Now</v-btn>
                     </v-card-actions> -->
@@ -110,6 +181,19 @@ export default {
           }).then(response => {
             this.data=response.data
           }) 
+      }
+    },
+    methods:{
+      newpage(url){
+        window.open(url,'_blank')
+      },
+      newsearchpage(title){
+        var query = title.split(" ").join("+")
+        if(query.indexOf("(")!=-1){
+          query=query.substring(0,query.indexOf("("))
+        }
+        var url = "https://www.imdb.com/find?ref_=nv_sr_fn&s=tt&q="+query
+        window.open(url,'_blank')
       }
     }
   }
