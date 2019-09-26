@@ -8,7 +8,7 @@ from django.db.models import Avg,Count
 from operator import itemgetter
 
 from django.db import connection
-
+from datetime import datetime
 
 
 @api_view(['GET', 'POST', 'DELETE'])
@@ -70,18 +70,28 @@ def ratings(request):
 
     if request.method == 'POST':
         ratings = request.data.get('ratings', None)
-        for cur_rating in ratings:
-            userid = cur_rating.get('userid', None)
-            userid=Profile.objects.get(id=userid)
-            movieid = cur_rating.get('movieid', None)
-            rating = cur_rating.get('rating', None)
-            date = cur_rating.get('date', None)
+        params = request.data.get('params', None)
+        if ratings:
+            for cur_rating in ratings:
+                userid = cur_rating.get('userid', None)
+                userid=Profile.objects.get(id=userid)
+                movieid = cur_rating.get('movieid', None)
+                rating = cur_rating.get('rating', None)
+                date = cur_rating.get('date', None)
 
-            if not (userid and movieid and rating and date):
-                continue
-            print(userid,movieid,rating,date)
+                if not (userid and movieid and rating and date):
+                    continue
+                print(userid,movieid,rating,date)
+                Rating(userid=userid, movieid=movieid, rating=rating, date=date).save()
+        if params:
+            print(params)
+            userid=params.get('userid',None)
+            movieid = params.get('movieid', None)
+            rating = params.get('rating', None)
+            dt = datetime.now()
+            date = dt.strftime('%Y-%m-%d %H:%M:%S')
+            print(userid, movieid, rating, date)
             Rating(userid=userid, movieid=movieid, rating=rating, date=date).save()
-
         return Response(status=status.HTTP_200_OK)
 
 def user_movieid(value):

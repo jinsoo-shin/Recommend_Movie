@@ -43,7 +43,9 @@
                       <td :colspan="headers.length" style="text-align:center; background:antiquewhite; border:beige solid 0.1px;">
                         <v-rating v-model="rating" half-increments hover style="display:inline" 
                           background-color="white"
-                          empty-icon="$vuetify.icons.ratingFull"></v-rating><v-btn
+                          empty-icon="$vuetify.icons.ratingFull"></v-rating>
+                          
+                          <v-btn 
                           :loading="loading"
                           :disabled="loading"
                           depressed
@@ -51,8 +53,8 @@
                           color="blue-grey"
                           class="ma-2 white--text"
                           fab
-                          @click="loader = 'loading'"
-                        >
+                          @click="PostRate(item.id)"
+                          >
                           <v-icon dark>mdi-cloud-upload</v-icon>
                         </v-btn>
                       </td>
@@ -68,6 +70,7 @@
 <script>
 import axios from "axios";
 const apiUrl = '/api'
+import Swal from 'sweetalert2'
 export default {
   name: 'TutorialPage',
   data: ()=>({
@@ -91,10 +94,16 @@ export default {
         { text: 'title', value: 'title' }
       ],
       Movies: [],
-      select: []
+      select: [],
+      RegUser : []
   }),
   mounted(){
-
+    axios.get(`${apiUrl}/auth/signup-many/`).then(response => {
+      this.RegUser = response.data[response.data.length-1];
+			}).catch(error =>{
+			}).finally(rs =>{
+      })
+      
     if(sessionStorage.getItem('Cookie'))
     {
       axios.get(`${apiUrl}/movies/`).then(response => {
@@ -109,13 +118,18 @@ export default {
       alert('접근하실 수 없습니다!');
       location.replace('/');
     }
+    Swal.fire({
+  type: 'question',
+  title: '평점 입력',
+  text : '평점을 입력하신 후 다른 페이지로 이동하세요.',
+  showConfirmButton: false,
+  timer: 3000
+})
   },
   methods: {
       selection(item){
           this.Title = item
-          console.log(item)
           this.select = [];
-          console.log(this.Movies[0])
           for(var i = 0; i < this.Movies.length;i++)
           {
               if(this.Movies[i].genres_array.indexOf(this.Title) != -1)
@@ -124,6 +138,19 @@ export default {
               }
           }
       },
+      PostRate(id){
+        const params = {
+          userid : this.RegUser.id,
+          movieid : id,
+          rating : this.rating
+        }
+          axios.post(`${apiUrl}/ratings/`, { params }).then(response => {
+            Swal.fire({position: 'top-end', type:'success', text:'전송 완료!', showConfirmButton: false, width: '20%', timer: 1500, heightAuto: true})
+          }).catch(error =>{
+            Swal.fire({type:'error', title:'다시 시도해주세요!'})
+          }).finally(rs =>{
+          })
+      }
   },
   created() {
         history.pushState(null, null, location.href);
@@ -137,7 +164,6 @@ export default {
         this[l] = !this[l]
 
         setTimeout(() => (this[l] = false), 2000)
-
         this.loader = null
       },
     },
