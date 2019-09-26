@@ -293,9 +293,9 @@ export default {
 						  }).then(response => {
 							// console.log("섬스:",response.data)
 							sessionStorage.setItem('subscribe', response.data);
+						location.href="/";
 						})
 
-						location.href="/";
 					}).catch(error =>{
 					}).finally(rs =>{
 					})
