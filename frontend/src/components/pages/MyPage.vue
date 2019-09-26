@@ -1,10 +1,9 @@
 <template>
   <div>
     <v-container>
-      <!-- {{userdata}} -->
       <h1 style="text-align:center">마이페이지</h1>
       <br>
-      <!-- <p>아이디 : user{{userdata.id}} </p> -->
+      <h3>아이디 : user{{userid}} </h3> <br>
       <v-row align="center">
         <v-col class="d-flex" cols="12" sm="3">
           <v-select
@@ -16,7 +15,6 @@
             v-model="age"
           ></v-select>
         </v-col>
-        <v-btn @click="test()">나이확인</v-btn>
       </v-row>
       <v-row align="center">
         <v-col class="d-flex" cols="12" sm="3">
@@ -44,6 +42,22 @@
       </v-row>
 
       <v-btn @click="modify_user()">수정하기</v-btn>
+      <br><br><br>
+      <v-row>
+        <v-col>
+          <h1 style="text-align:center">구독</h1> <br>
+          <h2>구독만료일</h2>
+          <v-flex>{{expiration}}</v-flex>
+        </v-col>
+      </v-row>
+      <br>
+      <v-row>
+        <v-col>
+          <v-btn @click="subscribe('1mon')">1개월 구독</v-btn> &nbsp;
+          <v-btn @click="subscribe('3mon')">3개월 구독</v-btn> &nbsp;
+          <v-btn @click="subscribe('1year')">1년 구독</v-btn>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
@@ -61,6 +75,9 @@ export default {
     age : 0,
     gender : "",
     job: "",
+    expiration: "",
+    isStaff : false,
+    username : "",
     subitems:{
       age:[
         {text:"Under 18",value:"1"},
@@ -109,80 +126,52 @@ export default {
     this.age = this.user_profile.age;
     this.job = this.user_profile.occupation;
     this.gender = this.user_profile.gender;
-
-    // switch(this.age) {
-    //   case 1:
-    //     this.age = "Under 18";
-    //     break;
-    //   case 18:
-    //     this.age = "18-24";
-    //     break;
-    //   case 25:
-    //     this.age = "25-34";
-    //     break;
-    //   case 35:
-    //     this.age = "35-44";
-    //     break;
-    //   case 45:
-    //     this.age = "45-49";
-    //     break;
-    //   case 50:
-    //     this.age = "50-55";
-    //     break;
-    //   case 56:
-    //     this.age = "56+";
-    //     break;        
-    // }
-
-    console.log("나이", this.age);
-    // asdasd
+    this.isStaff = this.user_profile.is_staff;
+    this.username = this.user_profile.username;
     
-    // const params = {
-    //   user_id: this.userdata.id,
-    //   expiration: "" // 현재 날짜 + 30 스트링으로 보내야함
-    // };
-
-    // axios.get(`${apiUrl}/subscribe/`, {
-    //   params,
-    //   }).then(response => {
-    //     // this.silmilar_movies=response.data
-    // })
+    this.expiration = sessionStorage.getItem('subscribe');
 
   },
   methods: {
     modify_user() {
-      // const params = {
-      //   id: this.userdata.id, // 이거 user앞에 붙여야할까?
-      //   age: 0,
-      //   occupation: 0,
-      //   gender: '' // 얘는 char?str?
-      // };
-
-      // axios.put(`${apiUrl}/auth_views/update_user`, {
-      //   params,
-      //   }).then(response => {
-      //     console.log(response);
-      //   })
-
-      alert("구현중입니다.");
-    },
-    subscribe_1mon() {
       const params = {
-        period: "1mon",
+        id: this.userid,
+        age: this.age,
+        gender: this.gender,
+        occupation: this.job,
+        is_staff: this.isStaff,
+        username: this.username
+      };
+
+      axios.put(`${apiUrl}/update/user/`, {
+        params,
+        }).then(response => {
+          sessionStorage.setItem('user_temp', JSON.stringify(params));
+          alert("수정 완료했습니다.");
+        })
+
+    },
+    subscribe(period_data) { // 구독 버튼
+      const params = {
+        period: period_data,
         user_id: this.userdata.id,
       };
 
-      axios.post(`${apiUrl}/subscribe/`, {
+      axios.post(`${apiUrl}/subscribes/`, {
         params,
         }).then(response => {
-          console.log(response);
+          this.expiration=response.data.expiration;
+          sessionStorage.setItem('subscribe', this.expiration);
+          
+          if (period_data == "1mon") {
+            alert("1개월 구독 되었습니다.");
+          } else if (period_data == "3mon") {
+            alert("3개월 구독 되었습니다.");
+          } else if (period_data == "1year") {
+            alert("1년 구독 되었습니다.");
+          }
         })
-    },
-    test() {
-      alert(this.age)
     }
-
-
 
   }
 }
