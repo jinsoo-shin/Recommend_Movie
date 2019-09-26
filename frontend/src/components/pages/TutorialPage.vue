@@ -144,8 +144,17 @@ export default {
           movieid : id,
           rating : this.rating
         }
+        const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 1500
+            })
           axios.post(`${apiUrl}/ratings/`, { params }).then(response => {
-            Swal.fire({position: 'top-end', type:'success', text:'전송 완료!', showConfirmButton: false, width: '20%', timer: 1500, heightAuto: true})
+            Toast.fire({
+              type: 'success',
+              title: '전송 완료!'
+            })
           }).catch(error =>{
             Swal.fire({type:'error', title:'다시 시도해주세요!'})
           }).finally(rs =>{
