@@ -63,7 +63,7 @@ def subscribe(request):
                 expiration = datetime.datetime.strptime(db_expiration[1],'%Y-%m-%d %H:%M:%S.%f') + datetime.timedelta(days=365)
         Subscribe(user_id=user_id, expiration=str(expiration)).save() # db에 적용
 
-        result={"status":"구독 1개월","만료일":expiration}
+        result={"status":"구독 1개월","expiration":expiration}
         return Response(data=result, status=status.HTTP_200_OK)
 
 

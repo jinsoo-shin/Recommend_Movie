@@ -73,22 +73,22 @@
                    <v-card-text class="white--text">
                       <div class="headline mb-2">{{data[model].title}} </div>
                       <v-row>
-                        <v-col cols="12">
+                        <v-col cols="12" id="colp">
                           <v-card>
                             <v-list dense>
                               <v-list-item v-if="data[model].title">
-                                <v-col cols="2">
+                                <v-col cols="2" id="colp">
                                   <v-list-item-content>Genres:</v-list-item-content>
                                 </v-col>
-                                <v-col cols="10">
+                                <v-col cols="10" id="colp">
                                   <v-list-item-content class="align-end">{{ data[model].genres }}</v-list-item-content>
                                 </v-col>
                               </v-list-item>
                               <v-list-item v-if="data[model].rating">
-                                <v-col cols="2">
+                                <v-col cols="2" id="colp">
                                   <v-list-item-content>Rating:</v-list-item-content>
                                 </v-col>
-                                <v-col cols="10">
+                                <v-col cols="10" id="colp">
                                   <v-list-item-content class="align-end">
                                     <v-flex>
                                       ({{data[model].rating}}) 
@@ -97,28 +97,28 @@
                                 </v-col>
                               </v-list-item>
                               <v-list-item v-if="data[model].Summary">
-                                <v-col cols="2">
+                                <v-col cols="2" id="colp">
                                   <v-list-item-content>Summary:</v-list-item-content>
                                 </v-col>
-                                <v-col cols="10">
+                                <v-col cols="10" id="colp">
                                   <v-list-item-content class="align-end">{{ data[model].Summary }}</v-list-item-content>
                                 </v-col>
                               </v-list-item>
 
                               <v-list-item v-if="data[model].Director">
-                                <v-col cols="2">
+                                <v-col cols="2" id="colp">
                                 <v-list-item-content>Director:</v-list-item-content>
                                 </v-col>
-                                <v-col cols="10">
+                                <v-col cols="10" id="colp">
                                   <v-list-item-content class="align-end">{{ data[model].Director}}</v-list-item-content>
                                 </v-col>
                               </v-list-item>
 
                               <v-list-item v-if="data[model].Writers">
-                                <v-col cols="2">
+                                <v-col cols="2" id="colp">
                                   <v-list-item-content >Writers:</v-list-item-content>
                                 </v-col>
-                                <v-col cols="10">
+                                <v-col cols="10" id="colp">
                                 <v-list-item-content class="align-end">{{data[model].Writers }}</v-list-item-content>
                                 </v-col>
                               </v-list-item>
