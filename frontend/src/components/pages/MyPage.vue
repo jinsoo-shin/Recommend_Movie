@@ -58,6 +58,61 @@
           <v-btn @click="subscribe('1year')">1년 구독</v-btn>
         </v-col>
       </v-row>
+       <br><br><br>
+      <v-row>
+        <v-col>
+          <h1 style="text-align:center">평점 수정</h1> <br>
+          <h2>영화 리스트</h2>
+        </v-col>
+      </v-row>
+      <br>
+      <v-row>
+        <v-col>
+          <v-card color="#7f7f7f">
+                    <v-card-title>
+                        <v-text-field
+                        v-model="search"
+                        append-icon="search"
+                        label="Search"
+                        single-line
+                        hide-details
+                        ></v-text-field>
+                    </v-card-title>
+                    <v-data-table
+                        light
+                        :headers="Movieheaders"
+                        :items="movielist"
+                        :search="search"
+                        show-expand
+                        item-key="movieid"
+                        :single-expand="singleExpand"
+                        height="25vmax"
+                    >
+                    <template v-slot:expanded-item="{ headers, item }">
+                      <td :colspan="headers.length" style="text-align:center; background:antiquewhite; border:beige solid 0.1px;">
+                        <v-rating v-model="rating" half-increments hover style="display:inline" 
+                          background-color="white"
+                          empty-icon="$vuetify.icons.ratingFull"></v-rating>
+                          
+                          <v-btn 
+                          :loading="loading"
+                          :disabled="loading"
+                          depressed
+                          small
+                          color="blue-grey"
+                          class="ma-2 white--text"
+                          fab
+                          @click="PostRate(item.movieid)"
+                          >
+                          <v-icon dark>mdi-cloud-upload</v-icon>
+                        </v-btn>
+                      </td>
+                    </template>
+                    </v-data-table>
+
+                    </v-card>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
@@ -65,10 +120,24 @@
 <script>
 import axios from "axios"
 const apiUrl = '/api' 
-
+import Swal from 'sweetalert2'
 export default {
   name: 'MyPage',
   data: ()=>({
+    rating: 0,
+    loader: null,
+    search: "",
+    loading: false,
+    singleExpand: true,
+    Movieheaders: [
+        {
+          text: 'ID',
+          align: 'left',
+          sortable: false,
+          value: 'movieid',
+        },
+        { text: 'title', value: 'title' }
+      ],
     userdata : null,
     user_profile : null,
     userid : 0,
@@ -78,6 +147,7 @@ export default {
     expiration: "",
     isStaff : false,
     username : "",
+    movielist: [],
     subitems:{
       age:[
         {text:"Under 18",value:"1"},
@@ -131,8 +201,41 @@ export default {
     
     this.expiration = sessionStorage.getItem('subscribe');
 
+    const params = {
+        userid: this.userid,
+        mode:"usermovie"
+      };     
+      axios.get(`${apiUrl}/ratings/`, {
+            params,
+        }).then(response => {
+          this.movielist=response.data
+          console.log(this.movielist)
+        }) 
   },
   methods: {
+    PostRate(id){
+      console.log(id + "1")
+        const params = {
+          userid : this.userid,
+          movieid : id,
+          rating : this.rating
+        }
+        const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          axios.post(`${apiUrl}/ratings/`, { params }).then(response => {
+            Toast.fire({
+              type: 'success',
+              title: '수정 완료!'
+            })
+          }).catch(error =>{
+            Swal.fire({type:'error', title:'다시 시도해주세요!'})
+          }).finally(rs =>{
+          })
+      },
     modify_user() {
       const params = {
         id: this.userid,
