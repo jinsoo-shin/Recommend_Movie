@@ -84,6 +84,7 @@ def ratings(request):
                 print(userid,movieid,rating,date)
                 Rating(userid=userid, movieid=movieid, rating=rating, date=date).save()
         if params:
+            print(params)
             userid=params.get('userid',None)
             movieid = params.get('movieid', None)
             rating = params.get('rating', None)
@@ -102,7 +103,7 @@ def user_movieid(value):
 
 def usermovie_sql(value):
     cursor = connection.cursor()
-    cursor.execute("SELECT m.title FROM api_rating r,api_movie m WHERE r.movieid=m.id and r.userid = %s",[value])
+    cursor.execute("SELECT m.title, r.movieid, r.rating FROM api_rating r,api_movie m WHERE r.movieid=m.id and r.userid = %s",[value])
 
     row = dictfetchall(cursor)
     return row

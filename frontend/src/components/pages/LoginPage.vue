@@ -282,7 +282,20 @@ export default {
 						sessionStorage.setItem('user', JSON.stringify(response.data[0]));
 						sessionStorage.setItem('user_temp', JSON.stringify(res.data[0]));
 						// console.log(sessionStorage.getItem('user'))
-						location.href="/";
+
+						// subscribe db에서 가져와서 해당유저의 구독 만료일 세션에등록
+						const params = {
+						  user_id: res.data[0].id
+						};
+
+						axios.get(`${apiUrl}/subscribes/`, {
+						  params,
+						  }).then(response => {
+							console.log("섬스:",response.data)
+							sessionStorage.setItem('subscribe', response.data);
+							location.href="/";
+						})
+
 					}).catch(error =>{
 					}).finally(rs =>{
 					})
@@ -306,21 +319,31 @@ export default {
 				age : this.select_age,
 				occupation : this.select_occupation,
 				gender : this.select_gender
-			};     
-			axios.post(`${apiUrl}/auth/signup/`, {
-					params,
-			}).then(response => {
-				console.log(response)
-				alert("가입 성공!")
-				loaction.replace('Tutorial')
-			}).catch(error =>{
-			}).finally(rs =>{
-				this.name= ''
-				this.email= ''
-				this.password= ''
-			})
+			};
+			var flag = false;
+
+			// axios.post(`${apiUrl}/auth/signup/`, {
+			// 		params,
+			// }).then(response => {
+			// 	// sessionStorage.setItem('Cookie', true);
+			// 	sessionStorage.setItem('Cookie', JSON.stringify(response));
+			// 	console.log(response)
+			// 	alert("가입 성공!")
 			sessionStorage.setItem('Cookie', true);
-			location.replace('Tutorial')
+				location.replace('Tutorial');
+			// 	flag = true;
+			// }).catch(error =>{
+			// 	console.log(error);
+			// }).finally(rs =>{
+			// 	this.name= ''
+			// 	this.email= ''
+			// 	this.password= ''
+			// })
+
+			// if(flag)
+			// {
+			// 	console.log(flag);
+			// }
 		},
 		sendEmail() {
 		}

@@ -7,7 +7,7 @@
           max-width="800"
           light
         >
-        <h3>{{user.username}}회원님과 비슷한 취향의 회원님들이 좋아하는 영화입니다</h3>
+        <h3 class="pt-4">{{user.username}}회원님과 비슷한 취향의 회원님들이 좋아하는 영화입니다</h3>
           <v-slide-group
             v-model="model"
             class="pa-4"
@@ -30,6 +30,7 @@
                 dark
               >
                 <v-row
+                id="colp"
                   class="fill-height"
                   align="center"
                   justify="center"
@@ -57,7 +58,7 @@
             <v-sheet
               v-if="model != null"
               color="grey lighten-4"
-              height="350"
+              height="400"
               tile
             >
               <v-row
@@ -69,19 +70,64 @@
                   <v-card
                     color="#385F73"
                     dark
+                    style="text-align:left"
                   >
                     <v-card-text class="white--text">
                       <div class="headline mb-2">{{data[model].title}} </div>
-                      {{data[model].genres}}
-                      <v-flex>
-                        <v-rating half-increments readonly v-model="data[model].rating" style="display:inline"></v-rating>
-                        ({{data[model].rating}}) 
-                      </v-flex>
-                      <v-flex>
-                       <div class="mb-2" v-if="data[model].Summary">줄거리 : {{data[model].Summary}} </div>
-                       <div class="mb-2" v-if="data[model].Director">감독 : {{data[model].Director}} </div>
-                       <div class="mb-2" v-if="data[model].Writers">작가 : {{data[model].Writers}} </div>
-                      </v-flex>
+                      <v-row>
+                        <v-col cols="12" id="colp">
+                          <v-card>
+                            <v-list dense>
+                              <v-list-item v-if="data[model].title">
+                                <v-col cols="2" id="colp">
+                                  <v-list-item-content>Genres:</v-list-item-content>
+                                </v-col>
+                                <v-col cols="10" id="colp">
+                                  <v-list-item-content class="align-end">{{ data[model].genres }}</v-list-item-content>
+                                </v-col>
+                              </v-list-item>
+                              <v-list-item v-if="data[model].rating">
+                                <v-col cols="2" id="colp">
+                                  <v-list-item-content>Rating:</v-list-item-content>
+                                </v-col>
+                                <v-col cols="10" id="colp">
+                                  <v-list-item-content class="align-end">
+                                    <v-flex>
+                                      ({{data[model].rating}}) 
+                                      <v-rating half-increments readonly v-model="data[model].rating" style="display:inline"></v-rating>
+                                    </v-flex></v-list-item-content>
+                                </v-col>
+                              </v-list-item>
+                              <v-list-item v-if="data[model].Summary">
+                                <v-col cols="2" id="colp">
+                                  <v-list-item-content>Summary:</v-list-item-content>
+                                </v-col>
+                                <v-col cols="10" id="colp">
+                                  <v-list-item-content class="align-end">{{ data[model].Summary }}</v-list-item-content>
+                                </v-col>
+                              </v-list-item>
+
+                              <v-list-item v-if="data[model].Director">
+                                <v-col cols="2" id="colp">
+                                <v-list-item-content>Director:</v-list-item-content>
+                                </v-col>
+                                <v-col cols="10" id="colp">
+                                  <v-list-item-content class="align-end">{{ data[model].Director}}</v-list-item-content>
+                                </v-col>
+                              </v-list-item>
+
+                              <v-list-item v-if="data[model].Writers">
+                                <v-col cols="2" id="colp">
+                                  <v-list-item-content >Writers:</v-list-item-content>
+                                </v-col>
+                                <v-col cols="10" id="colp">
+                                <v-list-item-content class="align-end">{{data[model].Writers }}</v-list-item-content>
+                                </v-col>
+                              </v-list-item>
+                            </v-list>
+                          </v-card>
+                        </v-col>
+                      </v-row>
                     </v-card-text>
                      <v-card-actions>
                         <div class="flex-grow-1"></div>
@@ -89,6 +135,15 @@
                           text
                           outlined 
                           @click="newpage(data[model].ImdbLink)"
+                          v-if="data[model].src!=='http://folo.co.kr/img/gm_noimage.png'"
+                        >
+                          Show More
+                        </v-btn>
+                        <v-btn
+                          text
+                          outlined 
+                          @click="newsearchpage(data[model].title)"
+                          v-if="data[model].src==='http://folo.co.kr/img/gm_noimage.png'"
                         >
                           Show More
                         </v-btn>
@@ -122,7 +177,6 @@ export default {
     mounted() {
       if(sessionStorage.getItem('user')){
         this.user=JSON.parse(sessionStorage.getItem('user'))
-        // console.log(this.user.id)
         const params = {
           userid: this.user.id,
         };     
@@ -136,7 +190,20 @@ export default {
     methods:{
       newpage(url){
         window.open(url,'_blank')
+      },
+      newsearchpage(title){
+        var query = title.split(" ").join("+")
+        if(query.indexOf("(")!=-1){
+          query=query.substring(0,query.indexOf("("))
+        }
+        var url = "https://www.imdb.com/find?ref_=nv_sr_fn&s=tt&q="+query
+        window.open(url,'_blank')
       }
     }
   }
 </script>
+<style>
+#colp {
+    padding: 0px 12px!important;
+}
+</style>
