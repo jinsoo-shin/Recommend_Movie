@@ -10,6 +10,7 @@
   "dependencies": {
     "@vue/cli": "^3.11.0",
     "apexcharts": "^3.8.5",
+    "audit": "0.0.6",
     "axios": "^0.19.0",
     "core-js": "^2.6.5",
     "sweetalert2": "^8.17.6",
