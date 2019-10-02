@@ -150,13 +150,13 @@ export default {
     movielist: [],
     subitems:{
       age:[
-        {text:"Under 18",value:"1"},
-        {text:"18-24",value:"18"},
-        {text:"25-34",value:"25"},
-        {text:"35-44",value:"35"},
-        {text:"45-49",value:"45"},
-        {text:"50-55",value:"50"},
-        {text:"56+",value:"56"},
+        {text:"Under 18",value:1},
+        {text:"18-24",value:18},
+        {text:"25-34",value:25},
+        {text:"35-44",value:35},
+        {text:"45-49",value:45},
+        {text:"50-55",value:50},
+        {text:"56+",value:56},
       ]
       ,occupation:[
         {text:"other",value:"other"},
@@ -198,6 +198,20 @@ export default {
     this.gender = this.user_profile.gender;
     this.isStaff = this.user_profile.is_staff;
     this.username = this.user_profile.username;
+
+    if(this.age >= 1 && this.age <= 17) {
+      this.age = 1;
+    } else if (this.age >= 18 && this.age <= 24) {
+      this.age = 18;
+    } else if (this.age >= 25 && this.age <= 34) {
+      this.age = 25;
+    } else if (this.age >= 35 && this.age <= 44) {
+      this.age = 35;
+    } else if (this.age >= 45 && this.age <= 49) {
+      this.age = 45;
+    } else if (this.age >= 50 && this.age <= 55) {
+      this.age = 50;
+    }
     
     this.expiration = sessionStorage.getItem('subscribe');
 
