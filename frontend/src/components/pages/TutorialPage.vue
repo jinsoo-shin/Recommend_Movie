@@ -121,7 +121,7 @@ export default {
     Swal.fire({
   type: 'question',
   title: '평점 입력',
-  text : '평점을 입력하신 후 다른 페이지로 이동하세요.',
+  text : '평점(10개 이상)을 입력하신 후 다른 페이지로 이동하세요.',
   showConfirmButton: false,
   timer: 3000
 })
