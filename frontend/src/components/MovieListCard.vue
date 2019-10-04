@@ -41,7 +41,7 @@
   </v-hover>
   <div v-if="silmilar_movies">
     <!-- <MovieInfo v-if="silmilar_movies" :silmilar_movies="state"></MovieInfo> -->
-    <MovieInfo :silmilar_movies="state"></MovieInfo>
+    <MovieInfo :silmilar_movies="state" :movie_content="movie_content"></MovieInfo>
   </div>
   </v-container>
 </template>
@@ -98,6 +98,7 @@ export default {
   data () {
     return {
       silmilar_movies:[],
+      movie_content:[]
     }
   },
   methods:{
@@ -120,7 +121,7 @@ export default {
         rating:this.rating,
         viewCnt:this.viewCnt,
       };
-      const params = {
+      let params = {
         mode: "user",
         movieid: this.id
       };
@@ -130,6 +131,18 @@ export default {
       this.changeMovieInfo(movie)//movieinfo에 넘기기용 vuex
       axios.put(`${apiUrl}/movies/?movieid=`+this.id, {
       })//조회수 증가
+    
+    console.log(this.id)
+     params = {
+        moviecontent: this.id,
+      };     
+      axios.get(`${apiUrl}/movies/`, {
+            params,
+        }).then(response => {
+          this.movie_content=response.data[0]
+        }) 
+
+
     },
     ...mapActions("data", ["changeDialog","changeMovieInfo","searchRating"]),
   },
