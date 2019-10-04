@@ -293,7 +293,7 @@ export default {
 						  }).then(response => {
 							console.log("섬스:",response.data)
 							sessionStorage.setItem('subscribe', response.data);
-						location.href="/";
+							location.href="/";
 						})
 
 					}).catch(error =>{
@@ -322,27 +322,28 @@ export default {
 			};
 			var flag = false;
 
-			axios.post(`${apiUrl}/auth/signup/`, {
-					params,
-			}).then(response => {
-				// sessionStorage.setItem('Cookie', true);
-				sessionStorage.setItem('Cookie', JSON.stringify(response));
-				console.log(response)
-				alert("가입 성공!")
+			// axios.post(`${apiUrl}/auth/signup/`, {
+			// 		params,
+			// }).then(response => {
+			// 	// sessionStorage.setItem('Cookie', true);
+			// 	sessionStorage.setItem('Cookie', JSON.stringify(response));
+			// 	console.log(response)
+			// 	alert("가입 성공!")
+			sessionStorage.setItem('Cookie', true);
 				location.replace('Tutorial');
-				flag = true;
-			}).catch(error =>{
-				console.log(error);
-			}).finally(rs =>{
-				this.name= ''
-				this.email= ''
-				this.password= ''
-			})
+			// 	flag = true;
+			// }).catch(error =>{
+			// 	console.log(error);
+			// }).finally(rs =>{
+			// 	this.name= ''
+			// 	this.email= ''
+			// 	this.password= ''
+			// })
 
-			if(flag)
-			{
-				console.log(flag);
-			}
+			// if(flag)
+			// {
+			// 	console.log(flag);
+			// }
 		},
 		sendEmail() {
 		}
