@@ -5,8 +5,8 @@ from api.serializers import MovieSerializer
 from rest_framework.response import Response
 from django.db.models import Avg
 from django.db import connection
-
-
+import sqlite3
+import pandas as pd
 API_URL = 'http://localhost:8000/api/'
 headers = {'content-type': 'application/json'}
 
@@ -20,12 +20,23 @@ def movies(request):
         rating = request.GET.get('rating',None)
         genres = request.GET.get('select',None)
 
-
+        movie_content = request.GET.get('moviecontent')
+        if movie_content:
+            cnx = sqlite3.connect('db.sqlite3')
+            query = "Select * from api_moviecontent where id ="+movie_content
+            result = pd.read_sql_query(query, cnx)
+            request_data=[]
+            src=result['posterUrl'][0]
+            ImdbLink=result['ImdbLink'][0]
+            Director=result['Director'][0]
+            Writers=result['Writers'][0]
+            Summary=result['Summary'][0]
+            request_data.append({"src":src,"ImdbLink":ImdbLink,"Director":Director,"Writers":Writers,"Summary":Summary})
+            return Response(data=request_data, status=status.HTTP_200_OK)
         movies = Movie.objects.all()
         if id:
             movies = movies.filter(pk=id)
         if title:
-            ## 여기에 영화 이미지도 추가하기
             movies = movies.filter(title__icontains=title)
         if genres:
             genres=genres.split(',')
@@ -50,7 +61,9 @@ def movies(request):
                 movies = movies.order_by(viewcnt)
             elif rating :
                 movies = movies.order_by(rating)
-        
+
+
+
         serializer = MovieSerializer(movies, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
