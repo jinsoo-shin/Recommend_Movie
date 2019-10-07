@@ -322,28 +322,21 @@ export default {
 			};
 			var flag = false;
 
-			// axios.post(`${apiUrl}/auth/signup/`, {
-			// 		params,
-			// }).then(response => {
-			// 	// sessionStorage.setItem('Cookie', true);
-			// 	sessionStorage.setItem('Cookie', JSON.stringify(response));
-			// 	console.log(response)
-			// 	alert("가입 성공!")
-			sessionStorage.setItem('Cookie', true);
-				location.replace('Tutorial');
-			// 	flag = true;
-			// }).catch(error =>{
-			// 	console.log(error);
-			// }).finally(rs =>{
-			// 	this.name= ''
-			// 	this.email= ''
-			// 	this.password= ''
-			// })
-
-			// if(flag)
-			// {
-			// 	console.log(flag);
-			// }
+			axios.post(`${apiUrl}/auth/signup/`, {
+					params,
+			}).then(response => {
+				// sessionStorage.setItem('Cookie', true);
+				sessionStorage.setItem('Cookie', JSON.stringify(response));
+				console.log(response)
+				alert("가입 성공!")
+				flag = true;
+			}).catch(error =>{
+				console.log(error);
+			}).finally(rs =>{
+				this.name= ''
+				this.email= ''
+				this.password= ''
+			})
 		},
 		sendEmail() {
 		}
