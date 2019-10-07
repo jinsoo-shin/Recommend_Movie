@@ -41,7 +41,7 @@
                     >
                     <template v-slot:expanded-item="{ headers, item }">
                       <td :colspan="headers.length" style="text-align:center; background:antiquewhite; border:beige solid 0.1px;">
-                        <v-rating v-model="rating" half-increments hover style="display:inline" 
+                        <v-rating v-model="rating" hover style="display:inline" 
                           background-color="white"
                           empty-icon="$vuetify.icons.ratingFull"></v-rating>
                           
