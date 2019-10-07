@@ -36,6 +36,7 @@
                       <v-list-item
                         v-for="subItem in subItems"
                         :key="subItem.title"
+                        @click="item.active=false"
                       >
                         <v-list-item-content>
                           <v-list-item-title v-text="subItem.title"></v-list-item-title>
