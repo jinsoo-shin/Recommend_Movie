@@ -42,14 +42,14 @@
           </v-list-item>
         </v-list>
         <v-divider></v-divider>
-        <v-list-item v-if="flag" @click="">
+        <v-list-item v-if="flag" 
+            @click="() => {
+                goTo('Admin')
+            }">
           <v-list-item-action>
             <v-icon color="">settings</v-icon>
           </v-list-item-action>
           <v-list-item-title class=""
-            @click="() => {
-                goTo('Admin')
-            }"
           >Manage</v-list-item-title>
         </v-list-item>
       </v-list>
