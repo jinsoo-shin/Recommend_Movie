@@ -1,63 +1,59 @@
 <template>
   <div>
     <v-container>
+
       <h1 style="text-align:center">마이페이지</h1>
       <br>
-      <h3>아이디 : user{{userid}} </h3> <br>
-      <v-row align="center">
-        <v-col class="d-flex" cols="12" sm="3">
-          <v-select
-            :items="subitems.age"
-            item-text="text"
-            item-value="value"
-            label="나이"
-            outlined
-            v-model="age"
-          ></v-select>
+      
+      <v-row>
+        <v-spacer></v-spacer><v-spacer></v-spacer>
+        <v-col cols="12" sm="4" md="4" xs="12">
+          <h2 style="text-align:center">회원 정보 수정</h2> <br>
+          <h3>아이디 : user {{userid}} </h3> <br>
+            <v-select
+              :items="subitems.age"
+              item-text="text"
+              item-value="value"
+              label="나이"
+              outlined
+              v-model="age"
+            ></v-select>
+            <v-select
+              :items="subitems.gender"
+              item-text="text"
+              item-value="value"
+              label="성별"
+              outlined
+              v-model="gender"
+            ></v-select>
+            <v-select
+              :items="subitems.occupation"
+              item-text="text"
+              item-value="value"
+              label="직업선택"
+              outlined
+              v-model="job"
+            ></v-select>
+          <v-btn @click="modify_user()" color="info">수정하기</v-btn>
+          <!-- 정보수정 박스 -->
         </v-col>
-      </v-row>
-      <v-row align="center">
-        <v-col class="d-flex" cols="12" sm="3">
-          <v-select
-            :items="subitems.gender"
-            item-text="text"
-            item-value="value"
-            label="성별"
-            outlined
-            v-model="gender"
-          ></v-select>  
+        <v-spacer></v-spacer>
+        <v-col cols="12" sm="6" md="5" xs="12" style="text-align:center;">
+          <h2 style="text-align:center">구독</h2> <br>
+          <span style="font-size:1.3em; font-weight:bold;">구독 만료일 : {{expiration}}</span><span>에 만료됨</span>
+          <br><br>
+          <v-row justify="center">
+          <v-btn @click="subscribe('1mon')" color="red">1개월 구독</v-btn> &nbsp;&nbsp;
+          <v-btn @click="subscribe('3mon')" color="red">3개월 구독</v-btn> &nbsp;&nbsp;
+          <v-btn @click="subscribe('1year')" color="red">1년 구독</v-btn>
+          <!-- 구독 박스 -->
+          </v-row>
         </v-col>
-      </v-row>
-      <v-row align="center">
-        <v-col class="d-flex" cols="12" sm="3">
-          <v-select
-            :items="subitems.occupation"
-            item-text="text"
-            item-value="value"
-            label="직업선택"
-            outlined
-            v-model="job"
-          ></v-select>
-        </v-col>
+        <v-spacer></v-spacer><v-spacer></v-spacer>
+        <!-- 마이페이지 박스 -->
       </v-row>
 
-      <v-btn @click="modify_user()">수정하기</v-btn>
-      <br><br><br>
-      <v-row>
-        <v-col>
-          <h1 style="text-align:center">구독</h1> <br>
-          <h2>구독만료일</h2>
-          <v-flex>{{expiration}}</v-flex>
-        </v-col>
-      </v-row>
-      <br>
-      <v-row>
-        <v-col>
-          <v-btn @click="subscribe('1mon')">1개월 구독</v-btn> &nbsp;
-          <v-btn @click="subscribe('3mon')">3개월 구독</v-btn> &nbsp;
-          <v-btn @click="subscribe('1year')">1년 구독</v-btn>
-        </v-col>
-      </v-row>
+
        <br><br><br>
       <v-row>
         <v-col>
