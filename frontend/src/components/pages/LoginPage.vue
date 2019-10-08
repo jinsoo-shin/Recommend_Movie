@@ -329,6 +329,7 @@ export default {
 				sessionStorage.setItem('Cookie', JSON.stringify(response));
 				console.log(response)
 				alert("가입 성공!")
+				location.replace('Tutorial');
 				flag = true;
 			}).catch(error =>{
 				console.log(error);
