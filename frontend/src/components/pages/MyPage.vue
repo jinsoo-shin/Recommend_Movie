@@ -9,7 +9,7 @@
         <v-spacer></v-spacer><v-spacer></v-spacer>
         <v-col cols="12" sm="4" md="4" xs="12">
           <h2 style="text-align:center">회원 정보 수정</h2> <br>
-          <h3>아이디 : user {{userid}} </h3> <br>
+          <h3>아이디 : {{username}} </h3> <br>
             <v-select
               :items="subitems.age"
               item-text="text"
