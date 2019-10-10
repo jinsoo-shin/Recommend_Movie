@@ -4434,3 +4434,12 @@ test test test test@test.com
 {'userid': 6044, 'movieid': 6, 'rating': 4.5}
 6044 6 4.5 2019-10-07 11:58:27
 Watching for file changes with StatReloader
+/home/ubuntu/BigData_8/bigdata_sub3/backend/api/views/movie_views.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+October 10, 2019 - 15:06:10
+Django version 2.2.4, using settings 'backend.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+Watching for file changes with StatReloader

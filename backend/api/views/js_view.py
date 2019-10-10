@@ -65,30 +65,15 @@ def test(request):
 
         print("rating이랑 유저정보 합체",df_new.head())
 
-        col_list = list(df_new.columns.values)[1:]  #정규화를 위해 사용합니다
+        col_list = list(df_new.columns.values)[1:]  #정규화를 위해 사용
 
         y = df_new['userid'].values.reshape(-1, 1)
         X=df_new.loc[:,col_list]
 
-        ####################
-        # vector_array = X.as_matrix()
-        # nmf = NMF(n_components=20)
-        # features=nmf.fit_transform(vector_array)
-        #
-        #
-        #
-        # normalizer = Normalizer()
-        # norm_features = normalizer.fit_transform(features)
-        # df_features = pd.DataFrame(norm_features)
-        # print(df_features.head())
-
-        ##유사도
-
-        #####################
         output = Normalizer().fit_transform(X)
         X= pd.DataFrame(output)
         print(X.head())
-        #gender, age, 봤던 영화 리스트~~~~~
+        #gender, age, 봤던 영화 리스트
         user = my_sql("user",str(userid))
 
         movie_list_tmp = my_sql("movie",str(userid))
@@ -101,16 +86,6 @@ def test(request):
 
         example = np.array(my_user_list)
         example = example.reshape(1, -1)
-################################
-        # ##유사도
-        # similar = df_features.dot(example)
-        # top = similar.nlargest()
-        # print("결과",top)
-################################
-        # kNN = KNeighborsClassifier(n_neighbors=5)
-        # test = kNN.fit(X,y).predict(example)
-        # print(test)
-        # print(y[test])
 
         nN= NearestNeighbors(n_neighbors=5,metric="euclidean").fit(X,y)
         nN_predict =nN.kneighbors_graph(example).toarray()
@@ -122,15 +97,9 @@ def test(request):
         print("유사한 유저 id",similar_user)
 
         user_list=",".join(similar_user)
-        # query="select m.id,m.title,m.genres,m.rating, p.posterUrl from api_movie m,api_moviecontent p where m.id = p.id and m.id in (select movieid from api_rating where userid in ("+user_list+") and movieid not in ( select movieid from api_rating where userid=" + str(userid)+") group by movieid having avg(rating) order by avg(rating) desc limit 10)"
         query="select m.id,m.title,m.genres,m.rating, p.posterUrl,p.Summary,p.Director,p.Writers,p.ImdbLink from api_movie m left join api_moviecontent p on m.id = p.id where m.id in (select movieid from api_rating where userid in ("+user_list+") and movieid not in ( select movieid from api_rating where userid="+ str(userid)+")) group by m.id having avg(m.rating) order by avg(m.rating) desc limit 10"
         result = pd.read_sql_query(query, cnx)
         print(result)
-
-
-        # df_test = pd.DataFrame(index=df_user,columns=df_movie)
-        # print(df_test)
-        # sql = "Select user_id,gender,age,occupation from api_profile where gender= '"+ str(user[0])+ "' and age = "+ str(user[1])+" and not user_id= "+str(userid)
 
 #################################
 

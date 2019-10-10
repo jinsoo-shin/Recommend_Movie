@@ -338,11 +338,6 @@ export default {
 				this.email= ''
 				this.password= ''
 			})
-
-			if(flag)
-			{
-				console.log(flag);
-			}
 		},
 		sendEmail() {
 		}
