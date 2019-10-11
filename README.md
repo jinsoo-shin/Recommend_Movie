@@ -18,3 +18,8 @@
 * (도전과제) Dataset 확장을 통한 영화 추천 정확도 개선
 
 * KNN Algorithm Studying!
+
+
+<추천해조>
+
+AWS : http://13.125.142.113:8080
